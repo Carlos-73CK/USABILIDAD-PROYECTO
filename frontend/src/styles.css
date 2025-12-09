@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Enlaces para saltar al contenido */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 0.75rem;
+  background: #111827;
+  color: white;
+}
+
+/* Foco visible reforzado */
+:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Tokens base de color */
+.hc-text { color: #111827; }
+.hc-bg { background-color: #ffffff; }
+
+/* Paleta y tokens de diseño del sistema */
+:root {
+  --brand-600: #14b8a6; /* teal */
+  --brand-700: #0d9488;
+  --bg: #f8fafc;        /* fondo app */
+  --surface: #ffffff;   /* tarjetas */
+  --elevated: #ffffff;  /* paneles */
+  --ring: rgba(37, 99, 235, 0.35);
+  --text: #0f172a;
+  --text-muted: #475569;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  letter-spacing: var(--ls);
+}
+
+/* Header con degradado sutil */
+.app-gradient {
+  background: linear-gradient(90deg, var(--brand-700), var(--brand-600));
+  color: #fff;
+}
+
+/* Tarjetas reutilizables */
+.card {
+  background: var(--surface);
+  border: 1px solid rgba(2, 6, 23, 0.08);
+  border-radius: 0.75rem; /* 12px */
+  box-shadow: 0 2px 8px rgba(2, 6, 23, 0.04);
+}
+.card .card-header { padding: 0.75rem 1rem; border-bottom: 1px solid rgba(2, 6, 23, 0.06); }
+.card .card-body { padding: 1rem; }
+
+/* Botones */
+.btn { 
+  display: inline-flex; align-items: center; gap: 0.5rem; 
+  border-radius: 0.5rem; border: 1px solid rgba(2,6,23,0.1);
+  padding: 0.5rem 0.875rem; background: #fff; color: var(--text);
+}
+.btn:focus { outline: none; box-shadow: 0 0 0 3px var(--ring); }
+.btn:hover { background: #f1f5f9; }
+.btn-primary { background: var(--brand-600); color: #fff; border-color: var(--brand-600); }
+.btn-primary:hover { background: var(--brand-700); }
+
+/* Chips para acciones rápidas */
+.chip { display:inline-flex; align-items:center; gap:0.375rem; padding:0.25rem 0.5rem; border-radius:9999px; background:#eef2ff; color:#3730a3; font-size:0.75rem; }
+
+/* Sidebar */
+.sidebar { background: #0f172a; color: #e2e8f0; }
+.sidebar button { color: inherit; }
+.sidebar .active { background: rgba(255,255,255,0.12); }
+.sidebar .hoverable:hover { background: rgba(255,255,255,0.08); }
+
+/* Inputs */
+.input { border:1px solid #cbd5e1; border-radius:0.5rem; padding:0.5rem 0.75rem; background:#fff; color:#0f172a; }
+.input:focus { outline:none; border-color: var(--brand-600); box-shadow: 0 0 0 3px var(--ring); }
+
+.muted { color: var(--text-muted); }
+
+/* Modo alto contraste: activado con data-theme="hc" en <html> */
+html[data-theme="hc"] {
+  --bg: #000000;
+  --fg: #ffffff;
+  --focus: #ffff00; /* amarillo para foco alto contraste */
+  /* Asegurar tokens de texto y superficies en alto contraste */
+  --text: #ffffff;
+  --text-muted: #d1d5db; /* gris claro para legibilidad */
+  --surface: #000000;
+  --elevated: #000000;
+}
+html[data-theme="hc"] body, html[data-theme="hc"] .hc-bg { background-color: var(--bg) !important; }
+html[data-theme="hc"] .hc-text, html[data-theme="hc"] body { color: var(--fg) !important; }
+html[data-theme="hc"] a { color: #00ffff; text-decoration: underline; }
+html[data-theme="hc"] .focus\:ring-2:focus { box-shadow: 0 0 0 3px var(--focus) !important; }
+html[data-theme="hc"] :focus-visible { outline-color: var(--focus); }
+html[data-theme="hc"] .border-gray-300 { border-color: #ffffff !important; }
+html[data-theme="hc"] .bg-red-50 { background-color: #4c0000 !important; }
+html[data-theme="hc"] .text-red-800 { color: #ffcccc !important; }
+/* Estados de éxito en alto contraste */
+html[data-theme="hc"] .bg-green-50 { background-color: #003300 !important; }
+html[data-theme="hc"] .text-green-800 { color: #ccffcc !important; }
+html[data-theme="hc"] .border-green-300 { border-color: #ffffff !important; }
+html[data-theme="hc"] .border-red-300 { border-color: #ffffff !important; }
+
+/* Componentes en alto contraste */
+html[data-theme="hc"] .card { background:#000 !important; border-color:#ffffff !important; box-shadow:none !important; }
+html[data-theme="hc"] .btn { background:#000 !important; color:#fff !important; border-color:#fff !important; }
+html[data-theme="hc"] .btn:hover { background:#111 !important; }
+html[data-theme="hc"] .btn-primary { background:#ffff00 !important; color:#000 !important; border-color:#ffff00 !important; }
+html[data-theme="hc"] .input { background:#000; color:#fff; border-color:#fff; }
+html[data-theme="hc"] .muted { color: var(--text-muted) !important; }
+/* Forzar textos grises de Tailwind a claros en HC */
+html[data-theme="hc"] .text-gray-700,
+html[data-theme="hc"] .text-gray-600,
+html[data-theme="hc"] .text-gray-500 { color:#ffffff !important; }
+html[data-theme="hc"] .sidebar { background:#000 !important; color:#fff !important; }
+html[data-theme="hc"] .sidebar .active { background:#222 !important; }
+html[data-theme="hc"] .sidebar .hoverable:hover { background:#111 !important; }
+
+/* Tema oscuro */
+html[data-theme="dark"] body, html[data-theme="dark"] .hc-bg { background-color: #0b1220; }
+html[data-theme="dark"] .hc-text, html[data-theme="dark"] body { color: #e5e7eb; }
+html[data-theme="dark"] a { color: #93c5fd; }
+html[data-theme="dark"] .border-gray-300 { border-color: #374151 !important; }
+html[data-theme="dark"] .card { background:#0f172a; border-color:#1f2937; box-shadow:none; }
+html[data-theme="dark"] .btn { background:#111827; color:#e5e7eb; border-color:#374151; }
+html[data-theme="dark"] .btn:hover { background:#1f2937; }
+html[data-theme="dark"] .input { background:#0b1220; color:#e5e7eb; border-color:#374151; }
+
+/* Ajustes globales de texto mediante variables */
+html { --ls: 0em; --lh: 1; }
+body, body * { line-height: calc(1.25 * var(--lh)); }
+
+/* Enlaces subrayados permanentes */
+.a11y-underline-links a { text-decoration: underline !important; text-underline-offset: 0.2em; }
+
+/* Objetivos más grandes: aumenta padding controlado */
+.a11y-large-targets button,
+.a11y-large-targets input[type="checkbox"],
+.a11y-large-targets input[type="radio"],
+.a11y-large-targets a,
+.a11y-large-targets select {
+  padding: calc(0.25rem + 0.15rem) calc(0.5rem + 0.2rem);
+}

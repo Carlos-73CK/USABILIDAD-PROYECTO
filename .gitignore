@@ -1,0 +1,13 @@
+# Root
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+.env.*
+*.log
+.vscode/
+.python-version
+.venv/
+__pycache__/
+.idea/
+coverage/
