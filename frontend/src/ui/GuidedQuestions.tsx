@@ -1,4 +1,5 @@
 import React, { useId, useState, useEffect } from 'react'
+import { Check, X, RotateCcw, AlertTriangle, HelpCircle } from 'lucide-react'
 
 type Answer = 'yes' | 'no' | 'unknown'
 
@@ -11,36 +12,37 @@ type Props = Readonly<{
 export function GuidedQuestions({ disabled, onChange, lang = 'es' }: Props) {
   const L = {
     es: {
-      title: 'Preguntas guiadas',
-      desc: 'Responde Sí/No. Esto ayuda a orientar mejor el resultado.',
-      rfTitle: 'Señales de alerta (responde con atención)',
+      title: 'Cuestionario Inicial',
+      desc: 'Responde estas preguntas rápidas para orientar el diagnóstico.',
+      rfTitle: 'Señales de Alerta',
+      rfDesc: 'Por favor, responde con especial atención.',
       qFever: '¿Tiene fiebre?',
-      qCough: '¿Tiene tos?',
-      qHeadache: '¿Dolor de cabeza?',
+      qCough: '¿Tiene tos persistente?',
+      qHeadache: '¿Dolor de cabeza intenso?',
       qBreath: '¿Dificultad para respirar?',
-      qChest: '¿Dolor en el pecho?',
-      qConfusion: '¿Confusión o desorientación?',
+      qChest: '¿Dolor o presión en el pecho?',
+      qConfusion: '¿Confusión repentina?',
       yes: 'Sí',
       no: 'No',
-      hint: 'Use flechas izquierda/derecha para cambiar la opción',
-      reset: 'Restablecer respuestas',
+      reset: 'Reiniciar cuestionario',
     },
     en: {
-      title: 'Guided questions',
-      desc: 'Answer Yes/No. This helps guide the result.',
-      rfTitle: 'Red flags (answer carefully)',
-      qFever: 'Do you have fever?',
-      qCough: 'Do you have cough?',
-      qHeadache: 'Headache?',
+      title: 'Initial Questionnaire',
+      desc: 'Answer these quick questions to guide the diagnosis.',
+      rfTitle: 'Red Flags',
+      rfDesc: 'Please answer with special attention.',
+      qFever: 'Do you have a fever?',
+      qCough: 'Do you have a persistent cough?',
+      qHeadache: 'Severe headache?',
       qBreath: 'Difficulty breathing?',
-      qChest: 'Chest pain?',
-      qConfusion: 'Confusion or disorientation?',
+      qChest: 'Chest pain or pressure?',
+      qConfusion: 'Sudden confusion?',
       yes: 'Yes',
       no: 'No',
-      hint: 'Use left/right arrows to change the option',
-      reset: 'Reset answers',
+      reset: 'Reset questionnaire',
     },
   } as const
+
   // Preguntas base
   const [fiebre, setFiebre] = useState<Answer>('unknown')
   const [tos, setTos] = useState<Answer>('unknown')
@@ -50,8 +52,6 @@ export function GuidedQuestions({ disabled, onChange, lang = 'es' }: Props) {
   // Red flags
   const [dolorPecho, setDolorPecho] = useState<Answer>('unknown')
   const [confusion, setConfusion] = useState<Answer>('unknown')
-
-  const helpId = useId()
 
   useEffect(() => {
     const positives: string[] = []
@@ -64,74 +64,99 @@ export function GuidedQuestions({ disabled, onChange, lang = 'es' }: Props) {
     if (dolorPecho === 'yes') red.push('dolor en el pecho')
     if (confusion === 'yes') red.push('confusión')
 
-    // Añadir red flags también a la lista de síntomas, para que el backend pueda considerarlos
     const all = [...positives, ...red]
     onChange(all, red)
   }, [fiebre, tos, dolorCabeza, dificultadRespirar, dolorPecho, confusion, onChange])
 
-  return (
-    <section className="grid gap-4" aria-labelledby="guided-title" aria-describedby={helpId}>
-      <h2 id="guided-title" className="text-xl font-semibold">{L[lang].title}</h2>
-      <p id={helpId} className="text-sm text-gray-700">{L[lang].desc}</p>
+  const reset = () => {
+    setFiebre('unknown'); setTos('unknown'); setDolorCabeza('unknown'); 
+    setDificultadRespirar('unknown'); setDolorPecho('unknown'); setConfusion('unknown')
+  }
 
-      <div className="grid gap-3">
-        <QuestionBinary label={L[lang].qFever} name="fiebre" value={fiebre} onChange={setFiebre} disabled={disabled} lang={lang} />
-        <QuestionBinary label={L[lang].qCough} name="tos" value={tos} onChange={setTos} disabled={disabled} lang={lang} />
-        <QuestionBinary label={L[lang].qHeadache} name="dolor-cabeza" value={dolorCabeza} onChange={setDolorCabeza} disabled={disabled} lang={lang} />
-        <QuestionBinary label={L[lang].qBreath} name="dificultad-respirar" value={dificultadRespirar} onChange={setDificultadRespirar} disabled={disabled} lang={lang} />
+  return (
+    <section className="space-y-8" aria-labelledby="guided-title">
+      
+      <div className="grid gap-4">
+        <QuestionCard label={L[lang].qFever} value={fiebre} onChange={setFiebre} disabled={disabled} lang={lang} />
+        <QuestionCard label={L[lang].qCough} value={tos} onChange={setTos} disabled={disabled} lang={lang} />
+        <QuestionCard label={L[lang].qHeadache} value={dolorCabeza} onChange={setDolorCabeza} disabled={disabled} lang={lang} />
+        <QuestionCard label={L[lang].qBreath} value={dificultadRespirar} onChange={setDificultadRespirar} disabled={disabled} lang={lang} />
       </div>
 
-      <div className="grid gap-3 mt-2">
-        <h3 className="font-medium">{L[lang].rfTitle}</h3>
-        <QuestionBinary label={L[lang].qChest} name="dolor-pecho" value={dolorPecho} onChange={setDolorPecho} disabled={disabled} lang={lang} />
-        <QuestionBinary label={L[lang].qConfusion} name="confusion" value={confusion} onChange={setConfusion} disabled={disabled} lang={lang} />
-        <div>
-          <button
-            type="button"
-            className="btn"
-            disabled={disabled}
-            onClick={() => {
-              setFiebre('unknown'); setTos('unknown'); setDolorCabeza('unknown'); setDificultadRespirar('unknown'); setDolorPecho('unknown'); setConfusion('unknown')
-            }}
-          >↺ {L[lang].reset}</button>
+      <div className="bg-red-50 rounded-2xl p-6 border border-red-100">
+        <div className="flex items-center gap-3 mb-4 text-red-800">
+          <AlertTriangle size={20} />
+          <div>
+            <h3 className="font-bold">{L[lang].rfTitle}</h3>
+            <p className="text-xs text-red-600">{L[lang].rfDesc}</p>
+          </div>
         </div>
+        <div className="grid gap-4">
+          <QuestionCard label={L[lang].qChest} value={dolorPecho} onChange={setDolorPecho} disabled={disabled} lang={lang} isRedFlag />
+          <QuestionCard label={L[lang].qConfusion} value={confusion} onChange={setConfusion} disabled={disabled} lang={lang} isRedFlag />
+        </div>
+      </div>
+
+      <div className="flex justify-end">
+        <button
+          type="button"
+          className="text-slate-500 hover:text-teal-600 text-sm font-medium flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors"
+          disabled={disabled}
+          onClick={reset}
+        >
+          <RotateCcw size={16} />
+          {L[lang].reset}
+        </button>
       </div>
     </section>
   )
 }
 
-function QuestionBinary({ label, name, value, onChange, disabled, lang = 'es' }: Readonly<{ label: string; name: string; value: Answer; onChange: (a: Answer) => void; disabled?: boolean; lang?: 'es' | 'en' }>) {
-  const groupId = useId()
+function QuestionCard({ label, value, onChange, disabled, lang = 'es', isRedFlag }: any) {
+  const id = useId()
   return (
-    <fieldset aria-describedby={`${groupId}-hint`}>
-      <legend className="mb-1">{label}</legend>
-      <div id={`${groupId}-hint`} className="sr-only">{lang === 'en' ? 'Use left/right arrows to change the option' : 'Use flechas izquierda/derecha para cambiar la opción'}</div>
-      <div className="flex gap-6 items-center">
-        <label className="inline-flex items-center gap-2">
-          <input
-            type="radio"
-            name={name}
-            value="yes"
-            checked={value === 'yes'}
-            onChange={() => onChange('yes')}
-            disabled={disabled}
-            className="h-4 w-4"
-          />
-          <span>{lang === 'en' ? 'Yes' : 'Sí'}</span>
-        </label>
-        <label className="inline-flex items-center gap-2">
-          <input
-            type="radio"
-            name={name}
-            value="no"
-            checked={value === 'no'}
-            onChange={() => onChange('no')}
-            disabled={disabled}
-            className="h-4 w-4"
-          />
-          <span>No</span>
-        </label>
+    <div className={`
+      flex items-center justify-between p-4 rounded-xl border transition-all
+      ${value !== 'unknown' 
+        ? (isRedFlag ? 'bg-white border-red-200 shadow-sm' : 'bg-white border-teal-200 shadow-sm') 
+        : (isRedFlag ? 'bg-white/50 border-red-100' : 'bg-slate-50 border-slate-100')
+      }
+    `}>
+      <label className={`font-medium ${isRedFlag ? 'text-red-900' : 'text-slate-700'}`}>{label}</label>
+      
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={() => onChange('yes')}
+          disabled={disabled}
+          className={`
+            w-10 h-10 rounded-lg flex items-center justify-center transition-all border
+            ${value === 'yes' 
+              ? (isRedFlag ? 'bg-red-600 text-white border-red-600 shadow-md' : 'bg-teal-600 text-white border-teal-600 shadow-md') 
+              : 'bg-white text-slate-400 border-slate-200 hover:border-slate-300'
+            }
+          `}
+          aria-label={lang === 'en' ? 'Yes' : 'Sí'}
+        >
+          <Check size={20} />
+        </button>
+        
+        <button
+          type="button"
+          onClick={() => onChange('no')}
+          disabled={disabled}
+          className={`
+            w-10 h-10 rounded-lg flex items-center justify-center transition-all border
+            ${value === 'no' 
+              ? 'bg-slate-600 text-white border-slate-600 shadow-md' 
+              : 'bg-white text-slate-400 border-slate-200 hover:border-slate-300'
+            }
+          `}
+          aria-label="No"
+        >
+          <X size={20} />
+        </button>
       </div>
-    </fieldset>
+    </div>
   )
 }

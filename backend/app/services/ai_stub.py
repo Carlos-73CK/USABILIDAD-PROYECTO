@@ -1,5 +1,5 @@
 from typing import Dict, List, Tuple
-from app.schemas import Diagnosis
+from ..schemas import Diagnosis
 
 
 # Conjunto local de conocimiento simple: condiciones con síntomas y pesos.
@@ -58,6 +58,45 @@ KB: Dict[str, Dict[str, float]] = {
     },
 }
 
+# Diccionario de sinónimos para normalizar entrada coloquial
+SYNONYMS = {
+    # Cabeza
+    "cabeza": S_DOLOR_CABEZA,
+    "jaqueca": S_DOLOR_CABEZA,
+    "cefalea": S_DOLOR_CABEZA,
+    # Fiebre
+    "calentura": "fiebre",
+    "temperatura": "fiebre",
+    "febrícula": "fiebre",
+    # Respiratorio
+    "moco": "goteo nasal",
+    "mocos": "goteo nasal",
+    "nariz tapada": "congestion",
+    "taponada": "congestion",
+    "garganta": "dolor de garganta",
+    "tragar": "dolor de garganta",
+    "aire": "falta de aire",
+    "ahogo": "falta de aire",
+    "disnea": "falta de aire",
+    # Gastro
+    "panza": "dolor abdominal",
+    "estomago": "dolor abdominal",
+    "barriga": "dolor abdominal",
+    "tripa": "dolor abdominal",
+    "vomito": "vomitos",
+    "devolver": "vomitos",
+    "suelto": "diarrea",
+    "cagarrinas": "diarrea",
+    # General
+    "cuerpo cortado": "malestar",
+    "mal cuerpo": "malestar",
+    "cansado": "cansancio",
+    "fatiga": "cansancio",
+    "agotado": "cansancio",
+    "frio": "escalofrios",
+    "tiritona": "escalofrios",
+}
+
 RECS: Dict[str, str] = {
     "Resfriado": "Hidratación, descanso, analgésicos/antitérmicos si procede.",
     "Gripe": "Reposo, hidratación; consultar si fiebre alta o dificultad respiratoria.",
@@ -69,7 +108,12 @@ RECS: Dict[str, str] = {
 
 
 def _normalize_symptom(s: str) -> str:
-    return s.lower().strip()
+    norm = s.lower().strip()
+    # Buscar coincidencia parcial o exacta en sinónimos
+    for key, val in SYNONYMS.items():
+        if key in norm:
+            return val
+    return norm
 
 
 def _score_condition(sym_set: set[str], cond_sym_weights: Dict[str, float]) -> float:

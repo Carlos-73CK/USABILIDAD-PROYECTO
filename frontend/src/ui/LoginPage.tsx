@@ -1,227 +1,355 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import illLogin from '../assets/illustration-login.svg'
+import { Mail, Lock, Eye, EyeOff, LogIn, AlertCircle, Check, UserPlus, FileText, X } from 'lucide-react'
+import { login, resetPassword } from '../api'
 
 type Props = Readonly<{
-  onSuccess: (email: string) => void
+  onSuccess: (email: string, name: string, token: string, remember: boolean) => void
+  onRegister: () => void
+  onTerms: () => void
   defaultEmail?: string
 }>
 
-function validateEmail(v: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
-}
-
-function passwordScore(pw: string) {
-  let score = 0
-  if (pw.length >= 8) score++
-  if (pw.length >= 12) score++
-  if (/[a-z]/.test(pw)) score++
-  if (/[A-Z]/.test(pw)) score++
-  if (/\d/.test(pw)) score++
-  if (/[^\w\s]/.test(pw)) score++
-  return Math.min(score, 5)
-}
-
-function scoreLabel(score: number, lang: 'es' | 'en') {
-  if (lang === 'en') {
-    if (score <= 1) return 'Very weak'
-    if (score === 2) return 'Weak'
-    if (score === 3) return 'Medium'
-    if (score === 4) return 'Strong'
-    return 'Very strong'
-  }
-  if (score <= 1) return 'Muy débil'
-  if (score === 2) return 'Débil'
-  if (score === 3) return 'Media'
-  if (score === 4) return 'Fuerte'
-  return 'Muy fuerte'
-}
-
-const labels = {
-  es: {
-    access: 'Acceso al sistema',
-    intro: 'Ingresa tu correo y contraseña. Ejemplo de correo: usuario@dominio.com',
-    email: 'Correo electrónico',
-    emailHint: 'Ej.: nombre.apellido@ejemplo.com',
-    password: 'Contraseña',
-    pwPlaceholder: 'Mínimo 8 caracteres, combina mayúsculas, números y símbolos',
-    strength: 'Fortaleza',
-    remember: 'Recordar usuario',
-    forgot: '¿Olvidaste tu contraseña?',
-    forgotMsg: 'Te ayudaremos a recuperar el acceso desde tu correo registrado.',
-    submit: 'Iniciar sesión',
-    help: 'Usa Tab para navegar por los campos. No hay temporizadores ni animaciones.',
-    show: 'Mostrar',
-    hide: 'Ocultar',
-    done: 'Inicio de sesión completado correctamente. Tiempo',
-  },
-  en: {
-    access: 'System access',
-    intro: 'Enter your email and password. Example: user@domain.com',
-    email: 'Email',
-    emailHint: 'E.g.: name.lastname@example.com',
-    password: 'Password',
-    pwPlaceholder: 'At least 8 chars, mix uppercase, numbers and symbols',
-    strength: 'Strength',
-    remember: 'Remember me',
-    forgot: 'Forgot your password?',
-    forgotMsg: 'We’ll help you recover access via your registered email.',
-    submit: 'Sign in',
-    help: 'Use Tab to move between fields. No timers or animations.',
-    show: 'Show',
-    hide: 'Hide',
-    done: 'Sign-in completed successfully. Time',
-  }
-} as const
-
-export function LoginPage({ onSuccess, defaultEmail = '' }: Props) {
+export function LoginPage({ onSuccess, onRegister, onTerms, defaultEmail = '' }: Props) {
   const [email, setEmail] = useState(defaultEmail)
   const [password, setPassword] = useState('')
   const [showPw, setShowPw] = useState(false)
   const [remember, setRemember] = useState(true)
-  const [status, setStatus] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
-  const startRef = useRef<number | null>(null)
+  const [forgotMode, setForgotMode] = useState(false)
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmNewPassword, setConfirmNewPassword] = useState('')
+
+  const getPasswordStrength = (pass: string) => {
+    let strength = 0;
+    if (pass.length >= 8) strength += 1;
+    if (/[A-Z]/.test(pass)) strength += 1;
+    if (/\d/.test(pass)) strength += 1;
+    if (/[^A-Za-z0-9]/.test(pass)) strength += 1;
+    return strength;
+  };
+  
+  const passwordStrength = getPasswordStrength(newPassword);
+  
+  const getStrengthColor = (strength: number) => {
+    if (strength <= 1) return 'bg-red-500';
+    if (strength === 2) return 'bg-yellow-500';
+    if (strength === 3) return 'bg-blue-500';
+    return 'bg-green-500';
+  };
+
+  const getStrengthText = (strength: number) => {
+    if (strength <= 1) return lang === 'es' ? 'Débil' : 'Weak';
+    if (strength === 2) return 'bg-yellow-500';
+    if (strength === 3) return 'bg-blue-500';
+    return 'bg-green-500';
+  };
+  
   const lang = useMemo<'es' | 'en'>(() => {
     try { return (localStorage.getItem('lang') === 'en' ? 'en' : 'es') } catch { return 'es' }
   }, [])
-  useEffect(() => {
-    // Reflejar idioma efectivo en <html> también aquí por consistencia
-    document.documentElement.lang = lang
-  }, [lang])
 
-  const emailOk = useMemo(() => validateEmail(email), [email])
-  const pwScore = useMemo(() => passwordScore(password), [password])
-  const pwOk = pwScore >= 3
+  const L = {
+    es: {
+      access: 'Bienvenido',
+      intro: 'Ingresa a tu cuenta para continuar.',
+      email: 'Correo electrónico',
+      password: 'Contraseña',
+      remember: 'Recordar mi usuario',
+      forgot: '¿Olvidaste tu contraseña?',
+      submit: 'Iniciar Sesión',
+      register: 'Crear cuenta nueva',
+      terms: 'Términos y Privacidad',
+      error: 'Error al iniciar sesión',
+      forgotTitle: 'Recuperar Contraseña',
+      forgotDesc: 'Ingresa tu correo y la nueva contraseña.',
+      sendLink: 'Actualizar Contraseña',
+      back: 'Volver al inicio',
+      linkSent: 'Contraseña actualizada.',
+      newPassword: 'Nueva Contraseña',
+      confirmNew: 'Confirmar Nueva Contraseña',
+      reqLen: 'Mínimo 8 caracteres',
+      reqCap: 'Al menos una mayúscula',
+      reqNum: 'Al menos un número',
+      reqSym: 'Al menos un símbolo',
+      passReq: 'Requisitos:'
+    },
+    en: {
+      access: 'Welcome Back',
+      intro: 'Sign in to your account to continue.',
+      email: 'Email address',
+      password: 'Password',
+      remember: 'Remember me',
+      forgot: 'Forgot password?',
+      submit: 'Sign In',
+      register: 'Create new account',
+      terms: 'Terms & Privacy',
+      error: 'Login failed',
+      forgotTitle: 'Recover Password',
+      forgotDesc: 'Enter your email and new password.',
+      sendLink: 'Update Password',
+      back: 'Back to login',
+      linkSent: 'Password updated.',
+      newPassword: 'New Password',
+      confirmNew: 'Confirm New Password',
+      reqLen: 'Minimum 8 characters',
+      reqCap: 'At least one uppercase letter',
+      reqNum: 'At least one number',
+      reqSym: 'At least one symbol',
+      passReq: 'Requirements:'
+    }
+  }
 
-  useEffect(() => {
-    startRef.current = performance.now()
-  }, [])
-
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setStatus(null)
-    if (!emailOk) {
-      document.getElementById('email')?.focus()
-      return
-    }
-    if (!pwOk) {
-      document.getElementById('password')?.focus()
-      return
-    }
+    setError(null)
     setSubmitting(true)
-    // Simula validación inmediata sin temporizadores arbitrarios
-    setTimeout(() => {
+    try {
+      const data = await login(email, password)
+      localStorage.setItem('token', data.access_token)
       if (remember) {
-        try { localStorage.setItem('rememberedEmail', email) } catch { /* storage not available */ }
+        localStorage.setItem('saved_email', email)
+      } else {
+        localStorage.removeItem('saved_email')
       }
-      const elapsed = startRef.current ? Math.round((performance.now() - startRef.current) / 1000) : 0
-      setStatus(`${labels[lang].done}: ${elapsed}s`)
+      onSuccess(email, data.user_name || email.split('@')[0], data.access_token, remember)
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
       setSubmitting(false)
-      onSuccess(email)
-    }, 50)
+    }
+  }
+
+  async function handleForgot(e: React.FormEvent) {
+    e.preventDefault()
+    setError(null)
+    
+    if (newPassword !== confirmNewPassword) {
+        setError(lang === 'es' ? 'Las contraseñas no coinciden' : 'Passwords do not match');
+        return;
+    }
+    
+    if (passwordStrength < 2) {
+        setError(lang === 'es' ? 'La contraseña es muy débil' : 'Password is too weak');
+        return;
+    }
+
+    setSubmitting(true)
+    try {
+        await resetPassword(email, newPassword)
+        alert(L[lang].linkSent)
+        setForgotMode(false)
+        setNewPassword('')
+        setConfirmNewPassword('')
+    } catch (err: any) {
+        setError(err.message)
+    } finally {
+        setSubmitting(false)
+    }
+  }
+
+  if (forgotMode) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4 animate-fade-in">
+        <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl border border-slate-100">
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">{L[lang].forgotTitle}</h2>
+          <p className="text-slate-500 mb-6">{L[lang].forgotDesc}</p>
+          
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg flex items-center text-sm">
+              <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0" />
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleForgot} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">{L[lang].email}</label>
+              <input 
+                type="email" 
+                required 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full p-3 rounded-xl border border-slate-200" 
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">{L[lang].newPassword}</label>
+              <input 
+                type="password" 
+                required 
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="w-full p-3 rounded-xl border border-slate-200" 
+              />
+              
+              {/* Password Strength Meter */}
+              {newPassword && (
+                  <div className="mt-2">
+                      <div className="flex justify-between mb-1">
+                          <span className="text-xs font-medium text-gray-700">{L[lang].passReq}</span>
+                          <span className="text-xs font-medium text-gray-700">{getStrengthText(passwordStrength)}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+                          <div 
+                              className={`h-1.5 rounded-full transition-all duration-300 ${getStrengthColor(passwordStrength)}`} 
+                              style={{ width: `${(passwordStrength / 4) * 100}%` }}
+                          ></div>
+                      </div>
+                      <ul className="mt-2 space-y-1">
+                          <li className={`text-xs flex items-center ${newPassword.length >= 8 ? 'text-green-600' : 'text-gray-500'}`}>
+                              {newPassword.length >= 8 ? <Check className="w-3 h-3 mr-1" /> : <X className="w-3 h-3 mr-1" />}
+                              {L[lang].reqLen}
+                          </li>
+                          <li className={`text-xs flex items-center ${/[A-Z]/.test(newPassword) ? 'text-green-600' : 'text-gray-500'}`}>
+                              {/[A-Z]/.test(newPassword) ? <Check className="w-3 h-3 mr-1" /> : <X className="w-3 h-3 mr-1" />}
+                              {L[lang].reqCap}
+                          </li>
+                          <li className={`text-xs flex items-center ${/\d/.test(newPassword) ? 'text-green-600' : 'text-gray-500'}`}>
+                              {/\d/.test(newPassword) ? <Check className="w-3 h-3 mr-1" /> : <X className="w-3 h-3 mr-1" />}
+                              {L[lang].reqNum}
+                          </li>
+                           <li className={`text-xs flex items-center ${/[^A-Za-z0-9]/.test(newPassword) ? 'text-green-600' : 'text-gray-500'}`}>
+                              {/[^A-Za-z0-9]/.test(newPassword) ? <Check className="w-3 h-3 mr-1" /> : <X className="w-3 h-3 mr-1" />}
+                              {L[lang].reqSym}
+                          </li>
+                      </ul>
+                  </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">{L[lang].confirmNew}</label>
+              <input 
+                type="password" 
+                required 
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                className="w-full p-3 rounded-xl border border-slate-200" 
+              />
+            </div>
+
+            <button type="submit" disabled={submitting} className="w-full bg-teal-600 text-white py-3 rounded-xl font-bold hover:bg-teal-700 disabled:opacity-50">
+              {submitting ? '...' : L[lang].sendLink}
+            </button>
+            <button type="button" onClick={() => setForgotMode(false)} className="w-full text-slate-500 py-2">
+              {L[lang].back}
+            </button>
+          </form>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4">
-      <section className="w-full max-w-4xl">
-        <div className="grid md:grid-cols-2 gap-4 items-center">
-          <div className="card overflow-hidden">
-            <div className="card-body">
-              <header className="mb-4">
-                <h1 className="text-2xl font-bold">{labels[lang].access}</h1>
-                <p className="text-sm muted">{labels[lang].intro}</p>
-              </header>
-        <form onSubmit={handleSubmit} noValidate className="grid gap-4" aria-describedby="login-help">
-          <div>
-            <label htmlFor="email" className="font-medium flex items-center gap-2">{labels[lang].email} {emailOk ? '✓' : '✗'}</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              className="input w-full"
-              placeholder="usuario@dominio.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              aria-invalid={!emailOk}
-              aria-describedby="email-hint"
-            />
-            <p id="email-hint" className="text-xs muted">{labels[lang].emailHint}</p>
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4 lg:p-8 animate-fade-in">
+      <div className="bg-white w-full max-w-5xl rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[600px]">
+        
+        {/* Left: Form */}
+        <div className="w-full lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center relative">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-slate-800 mb-2">{L[lang].access}</h1>
+            <p className="text-slate-500">{L[lang].intro}</p>
           </div>
 
-          <div>
-            <label htmlFor="password" className="font-medium flex items-center gap-2">{labels[lang].password} {pwOk ? '✓' : '✗'}</label>
-            <div className="flex gap-2">
-              <input
-                id="password"
-                name="password"
-                type={showPw ? 'text' : 'password'}
-                autoComplete="current-password"
-                required
-                className="input w-full"
-                placeholder={labels[lang].pwPlaceholder}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                aria-invalid={!pwOk}
-                aria-describedby="pw-meter pw-hint"
-              />
-              <button
-                type="button"
-                className="btn"
-                aria-pressed={showPw}
-                onClick={() => setShowPw((v) => !v)}
-              >{showPw ? `🙈 ${labels[lang].hide}` : `👁 ${labels[lang].show}`}</button>
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-xl flex items-center gap-3 border border-red-100 animate-shake">
+              <AlertCircle size={20} />
+              <span className="font-medium">{error}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-slate-700 ml-1">{L[lang].email}</label>
+              <div className="relative group">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-600 transition-colors" size={20} />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
+                  required
+                />
+              </div>
             </div>
 
-            {/* Medidor de fortaleza */}
-            <div className="mt-2" id="pw-meter" aria-live="polite">
-              <meter min={0} max={5} value={pwScore} className="w-full"></meter>
-              <div className="text-xs muted">{labels[lang].strength}: {scoreLabel(pwScore, lang)}</div>
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-slate-700 ml-1">{L[lang].password}</label>
+              <div className="relative group">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-600 transition-colors" size={20} />
+                <input
+                  type={showPw ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-12 pr-12 py-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPw(!showPw)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                >
+                  {showPw ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
-            <p id="pw-hint" className="text-xs muted">Consejo: usa frases largas, mezcla mayúsculas, números y símbolos.</p>
-          </div>
 
-          <div className="flex items-center gap-2">
-            <label className="inline-flex items-center gap-2">
-              <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
-              <span>{labels[lang].remember}</span>
-            </label>
-            <button type="button" className="ml-auto underline" onClick={() => setStatus(labels[lang].forgotMsg)}>{labels[lang].forgot}</button>
-          </div>
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={remember}
+                  onChange={(e) => setRemember(e.target.checked)}
+                  className="w-5 h-5 text-teal-600 rounded border-slate-300 focus:ring-teal-500"
+                />
+                <span className="text-sm text-slate-600 group-hover:text-slate-800 transition-colors">
+                  {lang === 'es' ? 'Recordar contraseña para ingreso automático' : 'Remember password for automatic login'}
+                </span>
+              </label>
+              <button type="button" onClick={() => setForgotMode(true)} className="text-sm text-teal-600 hover:text-teal-700 font-medium hover:underline">
+                {L[lang].forgot}
+              </button>
+            </div>
 
-          <div>
             <button
               type="submit"
-              disabled={!emailOk || !pwOk || submitting}
-              className="btn btn-primary disabled:opacity-60"
-            >🔒 {labels[lang].submit}</button>
+              disabled={submitting}
+              className="w-full bg-teal-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-teal-200 hover:bg-teal-700 hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {submitting ? (
+                <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              ) : (
+                <>
+                  <LogIn size={20} />
+                  {L[lang].submit}
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col gap-3">
+            <button onClick={onRegister} className="w-full py-3 rounded-xl border border-slate-200 text-slate-600 font-medium hover:bg-slate-50 hover:text-teal-700 transition-all flex items-center justify-center gap-2">
+              <UserPlus size={18} /> {L[lang].register}
+            </button>
+            <button onClick={onTerms} className="w-full py-2 text-sm text-slate-400 hover:text-slate-600 flex items-center justify-center gap-2">
+              <FileText size={14} /> {L[lang].terms}
+            </button>
           </div>
-          <p id="login-help" className="sr-only">{labels[lang].help}</p>
-        </form>
-            </div>
+        </div>
+
+        {/* Right: Illustration */}
+        <div className="hidden lg:flex w-1/2 bg-teal-50 items-center justify-center p-12 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-emerald-500/10" />
+          <div className="relative z-10 text-center">
+            <img src={illLogin} alt="" className="w-full max-w-md mx-auto mb-8 drop-shadow-2xl animate-float" />
+            <h3 className="text-2xl font-bold text-teal-900 mb-2">SaludAsist</h3>
+            <p className="text-teal-700/80 max-w-xs mx-auto">Tu asistente de diagnóstico inteligente y accesible.</p>
           </div>
-          <aside className="card">
-            <div className="card-body grid gap-3">
-              <img src={illLogin} alt="" aria-hidden className="w-full rounded" />
-              <div>
-                <h2 className="font-semibold mb-1">{lang==='en' ? 'Your data, protected' : 'Tus datos, protegidos'}</h2>
-                <ul className="text-sm list-disc pl-5 space-y-1 muted">
-                  <li>{lang==='en' ? 'We only use your input to generate a preliminary assessment.' : 'Usamos tus datos solo para generar un prediagnóstico.'}</li>
-                  <li>{lang==='en' ? 'No auto-playing media; keyboard navigation supported.' : 'Sin reproducción automática; navegación con teclado soportada.'}</li>
-                  <li>{lang==='en' ? 'You can change theme and font size at any time.' : 'Puedes cambiar tema y tamaño de letra cuando quieras.'}</li>
-                </ul>
-              </div>
-              <div className="text-xs muted">
-                {lang==='en' ? 'Tip: Use Alt+Shift+A to open the accessibility menu.' : 'Tip: Usa Alt+Shift+A para abrir el menú de accesibilidad.'}
-              </div>
-            </div>
-          </aside>
         </div>
-        <div className="mt-4" aria-live="polite" aria-atomic="true">
-          {status && <output className="text-green-700">{status}</output>}
-        </div>
-      </section>
-    </main>
+      </div>
+    </div>
   )
 }
