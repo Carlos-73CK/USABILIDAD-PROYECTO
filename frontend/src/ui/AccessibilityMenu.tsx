@@ -160,13 +160,14 @@ export function AccessibilityMenu() {
     const threshold = 150 // pixels from top/bottom (zona activa)
     const maxSpeed = 10 // pixels per frame (velocidad máxima)
 
+    const container = document.getElementById('main-scroll-container')
+
     const handleMouseMove = (e: MouseEvent) => {
       const { clientY } = e
       const { innerHeight } = window
       
       if (clientY < threshold) {
         // Top zone: scroll up
-        // Speed increases as we get closer to the edge
         const intensity = (threshold - clientY) / threshold
         scrollSpeed = -maxSpeed * intensity
       } else if (clientY > innerHeight - threshold) {
@@ -179,8 +180,8 @@ export function AccessibilityMenu() {
     }
 
     const scrollLoop = () => {
-      if (scrollSpeed !== 0) {
-        window.scrollBy(0, scrollSpeed)
+      if (scrollSpeed !== 0 && container) {
+        container.scrollBy(0, scrollSpeed)
       }
       animationFrameId = requestAnimationFrame(scrollLoop)
     }

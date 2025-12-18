@@ -281,7 +281,7 @@ export function Layout({ current, onNavigate, onLogout, lang, setLang, onSearch,
         </header>
 
         {/* SCROLLABLE CONTENT AREA */}
-        <main className="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
+        <main id="main-scroll-container" className="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
           <div className="max-w-7xl mx-auto space-y-8">
             {/* BREADCRUMB / STATUS */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in-up">
