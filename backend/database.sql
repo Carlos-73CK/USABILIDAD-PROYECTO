@@ -1,7 +1,7 @@
 -- Script para crear la base de datos y tablas en phpMyAdmin (MySQL)
 
-CREATE DATABASE IF NOT EXISTS salud_asist_db;
-USE salud_asist_db;
+CREATE DATABASE IF NOT EXISTS `usabilidad-proyecto`;
+USE `usabilidad-proyecto`;
 
 -- Tabla de Usuarios
 CREATE TABLE IF NOT EXISTS users (

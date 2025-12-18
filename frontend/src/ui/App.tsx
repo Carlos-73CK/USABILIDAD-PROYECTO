@@ -152,6 +152,18 @@ export function App() {
     setAckRedFlags(false)
   }, [])
 
+  function handleSearch(query: string) {
+    const q = query.toLowerCase()
+    if (q.includes('hist') || q.includes('history')) setPage('historial')
+    else if (q.includes('diag') || q.includes('sintoma') || q.includes('symptom')) setPage('diagnostico')
+    else if (q.includes('perf') || q.includes('prof')) setPage('perfil')
+    else if (q.includes('ayuda') || q.includes('help')) setPage('ayuda')
+    else if (q.includes('inicio') || q.includes('home')) setPage('inicio')
+    else {
+      setSessionMsg(lang === 'es' ? `No se encontraron resultados para "${query}"` : `No results found for "${query}"`)
+    }
+  }
+
   async function onSubmit(symptoms: string[]) {
     setError(null)
     setLoading(true)
@@ -488,6 +500,7 @@ export function App() {
         }} 
         lang={lang} 
         setLang={(l) => { setLangState(l); try { localStorage.setItem('lang', l) } catch { /* storage not available */ } }} 
+        onSearch={handleSearch}
         status={sessionMsg}
       >
         {renderBody()}

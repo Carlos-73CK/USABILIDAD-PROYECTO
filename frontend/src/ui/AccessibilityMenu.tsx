@@ -3,7 +3,7 @@ import {
   Accessibility, X, Eye, Type, Volume2, 
   Sun, Moon, Contrast, MousePointer, 
   Ear, ZoomIn, ZoomOut, 
-  Zap, Bell, Coffee
+  Zap, Bell, Coffee, ArrowDownCircle
 } from 'lucide-react'
 
 type Prefs = {
@@ -18,6 +18,7 @@ type Prefs = {
   visualAlerts: boolean
   pauseAnimations: boolean
   enhancedFocus: boolean
+  autoScroll: boolean
 }
 
 function readPrefs(): Prefs {
@@ -38,7 +39,8 @@ function readPrefs(): Prefs {
     fontSize: 1,
     visualAlerts: false,
     pauseAnimations: false,
-    enhancedFocus: false
+    enhancedFocus: false,
+    autoScroll: false
   }
 }
 
@@ -86,7 +88,8 @@ export function AccessibilityMenu() {
       zoom: 'Tamaño de texto',
       visualAlerts: 'Alertas visuales',
       pauseAnimations: 'Pausar animaciones',
-      enhancedFocus: 'Foco visible mejorado'
+      enhancedFocus: 'Foco visible mejorado',
+      autoScroll: 'Auto-desplazamiento'
     },
     en: {
       open: 'Open accessibility menu',
@@ -115,7 +118,8 @@ export function AccessibilityMenu() {
       zoom: 'Text size',
       visualAlerts: 'Visual alerts',
       pauseAnimations: 'Pause animations',
-      enhancedFocus: 'Enhanced focus'
+      enhancedFocus: 'Enhanced focus',
+      autoScroll: 'Auto-scroll'
     },
   } as const
 
@@ -146,6 +150,49 @@ export function AccessibilityMenu() {
     writePrefs(prefs)
     window.dispatchEvent(new CustomEvent('a11y-prefs-changed', { detail: prefs }))
   }, [prefs])
+
+  // Auto-scroll logic
+  useEffect(() => {
+    if (!prefs.autoScroll) return
+
+    let animationFrameId: number
+    let scrollSpeed = 0
+    const threshold = 150 // pixels from top/bottom (zona activa)
+    const maxSpeed = 10 // pixels per frame (velocidad máxima)
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const { clientY } = e
+      const { innerHeight } = window
+      
+      if (clientY < threshold) {
+        // Top zone: scroll up
+        // Speed increases as we get closer to the edge
+        const intensity = (threshold - clientY) / threshold
+        scrollSpeed = -maxSpeed * intensity
+      } else if (clientY > innerHeight - threshold) {
+        // Bottom zone: scroll down
+        const intensity = (clientY - (innerHeight - threshold)) / threshold
+        scrollSpeed = maxSpeed * intensity
+      } else {
+        scrollSpeed = 0
+      }
+    }
+
+    const scrollLoop = () => {
+      if (scrollSpeed !== 0) {
+        window.scrollBy(0, scrollSpeed)
+      }
+      animationFrameId = requestAnimationFrame(scrollLoop)
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    animationFrameId = requestAnimationFrame(scrollLoop)
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      cancelAnimationFrame(animationFrameId)
+    }
+  }, [prefs.autoScroll])
 
   // Lectura por voz al hacer hover
   useEffect(() => {
@@ -200,7 +247,8 @@ export function AccessibilityMenu() {
       fontSize: 1,
       visualAlerts: false,
       pauseAnimations: false,
-      enhancedFocus: false
+      enhancedFocus: false,
+      autoScroll: false
     })
   }
 
@@ -371,6 +419,12 @@ export function AccessibilityMenu() {
                       <MousePointer size={16} /> {L[lang].enhancedFocus}
                     </span>
                     <input type="checkbox" checked={prefs.enhancedFocus} onChange={(e) => update({ enhancedFocus: e.target.checked })} className="w-5 h-5 text-teal-600 rounded focus:ring-teal-500" />
+                  </label>
+                  <label className="flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
+                    <span className="text-sm font-medium flex items-center gap-2">
+                      <ArrowDownCircle size={16} /> {L[lang].autoScroll}
+                    </span>
+                    <input type="checkbox" checked={prefs.autoScroll} onChange={(e) => update({ autoScroll: e.target.checked })} className="w-5 h-5 text-teal-600 rounded focus:ring-teal-500" />
                   </label>
                 </div>
               </section>
