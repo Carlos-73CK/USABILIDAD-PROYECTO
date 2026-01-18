@@ -23,7 +23,8 @@ export type HistoryItem = {
   diagnoses: Diagnosis[]
 }
 
-const base = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+// Usar proxy de Vite para evitar problemas CORS y de conexión
+const base = import.meta.env.VITE_API_BASE_URL || '/api'
 
 function getAuthHeader(): Record<string, string> {
   const token = localStorage.getItem('token')

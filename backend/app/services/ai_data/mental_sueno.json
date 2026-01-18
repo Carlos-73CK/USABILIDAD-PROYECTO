@@ -1,0 +1,49 @@
+{
+  "diagnoses": {
+    "Ansiedad Generalizada": {
+      "symptoms": {
+        "palpitaciones": 0.35,
+        "sensacion de ahogo": 0.35,
+        "miedo irracional": 0.30,
+        "sudoracion excesiva": 0.25,
+        "temblores": 0.25,
+        "insomnio": 0.25,
+        "nerviosismo": 0.30
+      },
+      "recommendation": "Pruebe técnicas de respiración profunda (4-7-8). Si interfiere con su vida diaria, busque apoyo psicológico profesional."
+    },
+    "Ataque de Pánico": {
+      "symptoms": {
+        "palpitaciones": 0.40,
+        "sensacion de ahogo": 0.40,
+        "dolor de pecho": 0.30,
+        "temblores": 0.30,
+        "miedo intenso": 0.40,
+        "hormigueo": 0.25,
+        "mareo": 0.25
+      },
+      "recommendation": "Respire lento (4-6 segundos), busque un lugar seguro. Suele pasar en 10-20 minutos. Consulte si es nuevo o muy intenso."
+    },
+    "Insomnio": {
+      "symptoms": {
+        "dificultad para dormir": 0.55,
+        "despertar nocturno": 0.35,
+        "cansancio diurno": 0.30,
+        "irritabilidad": 0.25,
+        "dificultad para concentrarse": 0.25
+      },
+      "recommendation": "Mantenga una rutina de sueño regular. Evite pantallas y cafeína 4-6 horas antes de dormir. Consulte si persiste."
+    },
+    "Estrés Crónico": {
+      "symptoms": {
+        "tension muscular": 0.40,
+        "dolor de cabeza": 0.30,
+        "irritabilidad": 0.35,
+        "fatiga extrema": 0.30,
+        "dificultad para concentrarse": 0.30,
+        "insomnio": 0.25
+      },
+      "recommendation": "Identifique fuentes de estrés, practique técnicas de relajación y actividad física regular. Considere apoyo profesional si afecta su vida."
+    }
+  }
+}

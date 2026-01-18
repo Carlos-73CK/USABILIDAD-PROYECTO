@@ -1,0 +1,54 @@
+{
+  "diagnoses": {
+    "Esguince de Tobillo": {
+      "symptoms": {
+        "dolor de tobillo": 0.55,
+        "hinchazon": 0.45,
+        "moretones": 0.35,
+        "dificultad para caminar": 0.40,
+        "dolor al moverse": 0.35
+      },
+      "recommendation": "Reposo, hielo (15 min cada 2h), compresión y elevación (RICE). Si no puede apoyar el pie, acuda a valoración médica."
+    },
+    "Tendinitis": {
+      "symptoms": {
+        "dolor articular": 0.45,
+        "dolor al moverse": 0.45,
+        "inflamacion local": 0.35,
+        "dolor en tendón": 0.50,
+        "rigidez matutina": 0.25
+      },
+      "recommendation": "Reposo del área afectada, hielo y antiinflamatorios. Consulte si persiste más de 2 semanas para fisioterapia."
+    },
+    "Dolor Cervical": {
+      "symptoms": {
+        "dolor de cuello": 0.50,
+        "rigidez cervical": 0.45,
+        "dolor al girar cabeza": 0.40,
+        "dolor de cabeza": 0.25,
+        "hormigueo en brazo": 0.30
+      },
+      "recommendation": "Calor local, estiramientos suaves, mejore ergonomía. Si hay hormigueo persistente en brazos o debilidad, consulte."
+    },
+    "Dolor de Rodilla": {
+      "symptoms": {
+        "dolor de rodilla": 0.55,
+        "hinchazon": 0.35,
+        "dificultad para caminar": 0.35,
+        "rigidez articular": 0.30,
+        "crujidos": 0.25
+      },
+      "recommendation": "Reposo, hielo y evite sobrecarga. Consulte si hay bloqueo, inestabilidad o hinchazón severa."
+    },
+    "Artritis (Sospecha)": {
+      "symptoms": {
+        "dolor articular": 0.50,
+        "rigidez matutina": 0.45,
+        "hinchazon": 0.35,
+        "calor en articulacion": 0.35,
+        "rigidez articular": 0.40
+      },
+      "recommendation": "Mantenga actividad física moderada. Consulte a un médico para diagnóstico y tratamiento adecuado."
+    }
+  }
+}

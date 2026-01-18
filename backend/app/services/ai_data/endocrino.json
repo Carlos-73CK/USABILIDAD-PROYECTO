@@ -1,0 +1,47 @@
+{
+  "diagnoses": {
+    "Fatiga Crónica (Sospecha)": {
+      "symptoms": {
+        "fatiga extrema": 0.55,
+        "debilidad": 0.35,
+        "dificultad para concentrarse": 0.35,
+        "dolor muscular": 0.30,
+        "malestar general": 0.30,
+        "sueño no reparador": 0.35
+      },
+      "recommendation": "Mantenga horarios regulares de sueño, ejercicio moderado y alimentación balanceada. Consulte para descartar causas subyacentes."
+    },
+    "Hipotiroidismo (Sospecha)": {
+      "symptoms": {
+        "fatiga extrema": 0.40,
+        "aumento de peso": 0.35,
+        "frio": 0.30,
+        "piel seca": 0.25,
+        "depresion": 0.20,
+        "estrenimiento": 0.25
+      },
+      "recommendation": "Estos síntomas podrían indicar problemas de tiroides. Consulte a un médico para análisis de sangre (TSH)."
+    },
+    "Deficiencia de Vitamina D": {
+      "symptoms": {
+        "fatiga extrema": 0.35,
+        "dolor muscular": 0.30,
+        "debilidad": 0.30,
+        "dolor de huesos": 0.25,
+        "depresion": 0.20
+      },
+      "recommendation": "Expóngase al sol moderadamente y considere suplementos. Consulte para análisis de sangre y dosis adecuada."
+    },
+    "Diabetes (Sospecha)": {
+      "symptoms": {
+        "sed excesiva": 0.50,
+        "orinar frecuente": 0.45,
+        "hambre intensa": 0.35,
+        "perdida de peso inexplicable": 0.40,
+        "fatiga extrema": 0.35,
+        "vision borrosa": 0.30
+      },
+      "recommendation": "Estos síntomas requieren análisis de glucosa en sangre. Consulte a su médico para diagnóstico y manejo adecuado."
+    }
+  }
+}

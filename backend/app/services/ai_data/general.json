@@ -1,0 +1,33 @@
+{
+  "diagnoses": {
+    "Malestar General Inespecífico": {
+      "symptoms": {
+        "malestar general": 0.40,
+        "cansancio": 0.35,
+        "debilidad": 0.30,
+        "dolor de cuerpo": 0.30
+      },
+      "recommendation": "Descanse, mantenga buena hidratación y observe la evolución. Consulte si aparecen síntomas específicos o empeora."
+    },
+    "Resaca (Post-consumo de Alcohol)": {
+      "symptoms": {
+        "dolor de cabeza": 0.45,
+        "nauseas": 0.40,
+        "sed excesiva": 0.35,
+        "fatiga extrema": 0.30,
+        "sensibilidad a la luz": 0.25
+      },
+      "recommendation": "Hidratación con agua o suero, descanso y comidas ligeras. Evite más alcohol. Consulte si los síntomas son muy severos."
+    },
+    "Jet Lag / Desajuste Horario": {
+      "symptoms": {
+        "cansancio": 0.45,
+        "insomnio": 0.40,
+        "dificultad para concentrarse": 0.35,
+        "irritabilidad": 0.30,
+        "malestar general": 0.25
+      },
+      "recommendation": "Expóngase a luz natural, mantenga horarios regulares y evite siestas largas. Suele resolverse en 2-5 días."
+    }
+  }
+}

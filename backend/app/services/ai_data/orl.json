@@ -1,0 +1,54 @@
+{
+  "diagnoses": {
+    "Sinusitis": {
+      "symptoms": {
+        "dolor facial": 0.45,
+        "congestion nasal": 0.40,
+        "moco verde": 0.35,
+        "dolor de cabeza": 0.25,
+        "fiebre": 0.20,
+        "goteo nasal": 0.25
+      },
+      "recommendation": "Lavados nasales con agua salina, inhalaciones de vapor y mucha hidratación. Consulte si dura más de 10 días."
+    },
+    "Faringitis / Amigdalitis": {
+      "symptoms": {
+        "dolor de garganta": 0.50,
+        "dificultad para tragar": 0.45,
+        "fiebre": 0.35,
+        "placas en garganta": 0.35,
+        "ganglios inflamados": 0.30
+      },
+      "recommendation": "Gárgaras con agua tibia y sal, miel con limón y analgésicos si hay dolor. Consulte si hay fiebre alta o placas blancas."
+    },
+    "Otitis (Infección de Oído)": {
+      "symptoms": {
+        "dolor de oido": 0.55,
+        "fiebre": 0.30,
+        "mareo": 0.20,
+        "secrecion de oido": 0.35,
+        "disminucion de audicion": 0.30
+      },
+      "recommendation": "Evite mojar el oído. Aplique calor seco local. Consulte al médico si hay supuración o fiebre alta."
+    },
+    "Laringitis": {
+      "symptoms": {
+        "ronquera": 0.55,
+        "perdida de voz": 0.50,
+        "dolor de garganta": 0.30,
+        "tos seca": 0.30,
+        "irritacion de garganta": 0.25
+      },
+      "recommendation": "Reposo de voz, hidratación y evitar irritantes (humo). Consulte si dura más de 2 semanas o hay dificultad para respirar."
+    },
+    "Rinitis": {
+      "symptoms": {
+        "congestion nasal": 0.40,
+        "goteo nasal": 0.40,
+        "estornudos": 0.30,
+        "picazon nasal": 0.25
+      },
+      "recommendation": "Lavados nasales, hidratación y reposo. Consulte si hay fiebre alta o síntomas persistentes por más de 2 semanas."
+    }
+  }
+}

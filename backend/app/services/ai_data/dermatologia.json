@@ -1,0 +1,42 @@
+{
+  "diagnoses": {
+    "Herpes Labial": {
+      "symptoms": {
+        "ampolla en labio": 0.55,
+        "hormigueo en labio": 0.45,
+        "picazon en labio": 0.40,
+        "lesion en labio": 0.40
+      },
+      "recommendation": "Evite tocar las lesiones, use cremas antivirales y mantenga la zona limpia. Consulte si es muy extenso o frecuente."
+    },
+    "Picadura de Insecto": {
+      "symptoms": {
+        "picazon en piel": 0.45,
+        "hinchazon local": 0.40,
+        "enrojecimiento": 0.35,
+        "dolor en zona de picadura": 0.30
+      },
+      "recommendation": "Lave la zona, aplique hielo y crema antihistamínica. Acuda a urgencias si hay dificultad para respirar o hinchazón facial."
+    },
+    "Quemadura Solar": {
+      "symptoms": {
+        "enrojecimiento": 0.50,
+        "dolor en piel": 0.45,
+        "piel caliente": 0.40,
+        "ampollas": 0.35,
+        "picazon en piel": 0.25
+      },
+      "recommendation": "Aplique compresas frías, crema hidratante (aloe vera) y beba agua. Evite el sol. Consulte si hay ampollas extensas."
+    },
+    "Pie de Atleta (Hongos)": {
+      "symptoms": {
+        "picazon entre dedos": 0.55,
+        "descamacion pies": 0.45,
+        "mal olor pies": 0.35,
+        "enrojecimiento": 0.30,
+        "ampollas": 0.25
+      },
+      "recommendation": "Mantenga los pies secos, use antimicóticos tópicos y calcetines de algodón. Consulte si no mejora en 2 semanas."
+    }
+  }
+}

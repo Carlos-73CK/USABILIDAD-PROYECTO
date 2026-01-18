@@ -1,0 +1,75 @@
+{
+  "diagnoses": {
+    "Resfriado Común": {
+      "symptoms": {
+        "tos": 0.30,
+        "congestion nasal": 0.35,
+        "goteo nasal": 0.30,
+        "dolor de garganta": 0.25,
+        "estornudos": 0.25,
+        "fiebre": 0.10,
+        "malestar general": 0.20
+      },
+      "recommendation": "Hidratación constante, descanso y analgésicos de venta libre si es necesario. Consulte si los síntomas empeoran o duran más de 10 días."
+    },
+    "Gripe Estacional": {
+      "symptoms": {
+        "fiebre": 0.45,
+        "escalofrios": 0.30,
+        "dolor muscular": 0.35,
+        "tos": 0.25,
+        "fatiga extrema": 0.35,
+        "dolor de cabeza": 0.25,
+        "malestar general": 0.25
+      },
+      "recommendation": "Reposo absoluto, mucha hidratación. Consulte al médico si la fiebre es muy alta (>39°C) o hay dificultad para respirar."
+    },
+    "COVID-19 (Sospecha)": {
+      "symptoms": {
+        "fiebre": 0.35,
+        "tos": 0.35,
+        "dificultad para respirar": 0.45,
+        "perdida de olfato": 0.50,
+        "perdida de gusto": 0.50,
+        "dolor de garganta": 0.20,
+        "dolor muscular": 0.20,
+        "fatiga extrema": 0.25
+      },
+      "recommendation": "Aislamiento preventivo, uso de mascarilla y monitoreo de oxígeno. Busque ayuda médica urgente si hay dificultad para respirar o dolor de pecho."
+    },
+    "Bronquitis Aguda": {
+      "symptoms": {
+        "tos": 0.45,
+        "tos persistente": 0.45,
+        "flema": 0.40,
+        "silbidos al respirar": 0.30,
+        "dolor de pecho": 0.25,
+        "fatiga extrema": 0.20,
+        "fiebre": 0.15
+      },
+      "recommendation": "Hidratación, reposo y evitar humo/irritantes. Consulte si la tos dura más de 3 semanas o hay dificultad para respirar."
+    },
+    "Neumonía (Sospecha)": {
+      "symptoms": {
+        "fiebre": 0.40,
+        "escalofrios": 0.30,
+        "tos": 0.30,
+        "flema": 0.30,
+        "dificultad para respirar": 0.45,
+        "dolor de pecho": 0.40,
+        "fatiga extrema": 0.30
+      },
+      "recommendation": "Requiere evaluación médica urgente. Si hay falta de aire, dolor de pecho o fiebre alta persistente, acuda a urgencias."
+    },
+    "Crisis de Asma": {
+      "symptoms": {
+        "dificultad para respirar": 0.50,
+        "silbidos al respirar": 0.45,
+        "opresion en el pecho": 0.40,
+        "tos": 0.25,
+        "tos nocturna": 0.25
+      },
+      "recommendation": "Use su inhalador de rescate si lo tiene. Si no mejora en 15 minutos o hay dificultad para hablar, acuda a urgencias."
+    }
+  }
+}

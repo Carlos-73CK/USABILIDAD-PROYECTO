@@ -1,0 +1,43 @@
+{
+  "diagnoses": {
+    "Alergia Estacional": {
+      "symptoms": {
+        "estornudos": 0.40,
+        "picazon en ojos": 0.35,
+        "ojos llorosos": 0.35,
+        "goteo nasal": 0.30,
+        "congestion nasal": 0.25,
+        "picazon nasal": 0.25
+      },
+      "recommendation": "Evite alérgenos conocidos (polen, polvo). Consulte sobre antihistamínicos si los síntomas persisten."
+    },
+    "Dermatitis / Eczema": {
+      "symptoms": {
+        "picazon en piel": 0.45,
+        "enrojecimiento": 0.35,
+        "piel seca": 0.35,
+        "erupcion cutanea": 0.35
+      },
+      "recommendation": "Mantenga la piel hidratada con cremas neutras. Evite rascarse y el uso de jabones agresivos."
+    },
+    "Conjuntivitis": {
+      "symptoms": {
+        "ojo rojo": 0.45,
+        "picazon en ojos": 0.35,
+        "lagañas": 0.35,
+        "sensibilidad a la luz": 0.25,
+        "ojos llorosos": 0.25
+      },
+      "recommendation": "Lave sus ojos con suero fisiológico. No comparta toallas y evite tocarse los ojos. Consulte si hay dolor intenso."
+    },
+    "Urticaria (Ronchas)": {
+      "symptoms": {
+        "ronchas": 0.50,
+        "picazon en piel": 0.45,
+        "hinchazon": 0.35,
+        "erupcion cutanea": 0.30
+      },
+      "recommendation": "Evite el desencadenante si lo identifica. Consulte sobre antihistamínicos. Acuda a urgencias si hay hinchazón de labios/rostro o dificultad para respirar."
+    }
+  }
+}

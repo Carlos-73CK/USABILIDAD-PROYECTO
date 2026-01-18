@@ -1,4 +1,6 @@
 from typing import Dict, List, Tuple
+import json
+from pathlib import Path
 import numpy as np
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -12,165 +14,113 @@ S_FIEBRE = "fiebre"
 S_TOS = "tos"
 S_DOLOR_ESTOMAGO = "dolor de estomago"
 
-KB: Dict[str, Dict[str, float]] = {
-    # Infecciones respiratorias
-    "Resfriado Común": {
-        S_TOS: 0.30,
-        "congestion nasal": 0.30,
-        "goteo nasal": 0.25,
-        "dolor de garganta": 0.25,
-        "estornudos": 0.20,
-        S_FIEBRE: 0.10, # Poco común
-        "malestar general": 0.20,
-    },
-    "Gripe Estacional": {
-        S_FIEBRE: 0.40,
-        "escalofrios": 0.25,
-        "dolor muscular": 0.30,
-        S_TOS: 0.25,
-        "fatiga extrema": 0.30,
-        S_DOLOR_CABEZA: 0.25,
-    },
-    "COVID-19": {
-        S_FIEBRE: 0.35,
-        S_TOS: 0.35,
-        "dificultad para respirar": 0.40,
-        "perdida de olfato": 0.45, # Muy específico
-        "perdida de gusto": 0.45,
-        "dolor de garganta": 0.20,
-        "dolor muscular": 0.20,
-    },
-    # Cefaleas
-    "Migraña": {
-        S_DOLOR_CABEZA: 0.50,
-        "nauseas": 0.30,
-        "sensibilidad a la luz": 0.35, # Fotofobia
-        "sensibilidad al ruido": 0.25, # Fonofobia
-        "vision borrosa o aura": 0.30,
-    },
-    "Cefalea Tensional": {
-        S_DOLOR_CABEZA: 0.45,
-        "estres o ansiedad": 0.30,
-        "tension en el cuello": 0.35,
-        "mala postura": 0.20,
-    },
-    # Gastrointestinal
-    "Gastroenteritis": {
-        "nauseas": 0.35,
-        "vomitos": 0.40,
-        "diarrea": 0.45,
-        "dolor abdominal": 0.35,
-        S_FIEBRE: 0.20,
-    },
-    "Indigestión / Acidez": {
-        "ardor de estomago": 0.40,
-        "gases": 0.30,
-        "sensacion de llenura": 0.30,
-        "eructos": 0.20,
-        "dolor abdominal": 0.20,
-    },
-    # Alergias
-    "Alergia Estacional": {
-        "estornudos": 0.35,
-        "picazon en ojos": 0.30,
-        "ojos llorosos": 0.30,
-        "goteo nasal": 0.25,
-        "congestion nasal": 0.20,
-    },
-    # Salud Mental (Básico)
-    "Ansiedad Generalizada": {
-        "palpitaciones": 0.30,
-        "sensacion de ahogo": 0.30,
-        "miedo irracional": 0.25,
-        "sudoracion excesiva": 0.20,
-        "temblores": 0.20,
-        "insomnio": 0.20,
-    },
-    # Piel
-    "Dermatitis / Eczema": {
-        "picazon en piel": 0.40,
-        "enrojecimiento": 0.30,
-        "piel seca": 0.30,
-        "erupcion cutanea": 0.30,
-    },
-    "Conjuntivitis": {
-        "ojo rojo": 0.40,
-        "picazon en ojos": 0.30,
-        "lagañas": 0.30,
-        "sensibilidad a la luz": 0.20,
-    },
-    # Oído, Nariz y Garganta (ORL)
-    "Sinusitis": {
-        "dolor facial": 0.40,
-        "congestion nasal": 0.30,
-        "moco verde": 0.30,
-        S_DOLOR_CABEZA: 0.20,
-        S_FIEBRE: 0.15,
-    },
-    "Faringitis / Amigdalitis": {
-        "dolor de garganta": 0.50,
-        "dificultad para tragar": 0.40,
-        S_FIEBRE: 0.30,
-        "placas en garganta": 0.30,
-        "ganglios inflamados": 0.20,
-    },
-    "Otitis": {
-        "dolor de oido": 0.50,
-        S_FIEBRE: 0.25,
-        "mareo": 0.20,
-        "secrecion oido": 0.30,
-    },
-    # Muscular / Esquelético
-    "Contractura / Lumbalgia": {
-        "dolor de espalda": 0.45,
-        "rigidez muscular": 0.35,
-        "dolor al moverse": 0.30,
-        "dolor lumbar": 0.40,
-    },
-    # Otros
-    "Deshidratación": {
-        "sed excesiva": 0.45,
-        "boca seca": 0.40,
-        "orina oscura": 0.35,
-        "mareo": 0.30,
-        "fatiga extrema": 0.25,
-    },
-    "Anemia": {
-        "palidez": 0.40,
-        "fatiga extrema": 0.40,
-        "mareo": 0.30,
-        "frio": 0.25,
-        "debilidad": 0.30,
-    },
-    # Sueño
-    "Insomnio": {
-        "dificultad para dormir": 0.50,
-        "despertar nocturno": 0.30,
-        "cansancio diurno": 0.20,
-        "irritabilidad": 0.20,
-    }
-}
+# La base de conocimiento se carga desde múltiples JSON en `ai_data/*.json`.
+# Dejamos estos dicts como fallback (mínimo) por si faltan los archivos.
+KB: Dict[str, Dict[str, float]] = {}
+RECS: Dict[str, str] = {}
 
-RECS: Dict[str, str] = {
-    "Resfriado Común": "Hidratación constante, descanso y analgésicos de venta libre si es necesario.",
-    "Gripe Estacional": "Reposo absoluto, mucha hidratación. Consulte al médico si la fiebre es muy alta.",
-    "COVID-19": "Aislamiento preventivo, uso de mascarilla y monitoreo de oxígeno. Busque ayuda si falta el aire.",
-    "Migraña": "Descanso en habitación oscura y silenciosa. Tome su medicación prescrita si la tiene.",
-    "Cefalea Tensional": "Realice estiramientos de cuello, mejore su postura y tome pausas activas.",
-    "Gastroenteritis": "Dieta blanda y suero oral para evitar deshidratación. Evite lácteos.",
-    "Indigestión / Acidez": "Evite comidas pesadas, picantes o grasas. No se acueste inmediatamente después de comer.",
-    "Alergia Estacional": "Evite alérgenos conocidos. Consulte sobre antihistamínicos si los síntomas persisten.",
-    "Ansiedad Generalizada": "Pruebe técnicas de respiración profunda. Si interfiere con su vida diaria, busque apoyo psicológico.",
-    "Dermatitis / Eczema": "Mantenga la piel hidratada con cremas neutras. Evite rascarse y el uso de jabones agresivos.",
-    "Conjuntivitis": "Lave sus ojos con suero fisiológico. No comparta toallas y evite tocarse los ojos.",
-    "Sinusitis": "Lavados nasales con agua salina, inhalaciones de vapor y mucha hidratación.",
-    "Faringitis / Amigdalitis": "Gárgaras con agua tibia y sal, miel con limón y analgésicos si hay dolor.",
-    "Otitis": "Evite mojar el oído. Aplique calor seco local. Consulte al médico si hay supuración.",
-    "Contractura / Lumbalgia": "Calor local, estiramientos suaves y evitar levantar peso. Mejore su postura.",
-    "Deshidratación": "Beba agua o suero oral en pequeños sorbos constantes. Evite el sol directo.",
-    "Anemia": "Consuma alimentos ricos en hierro (carnes rojas, espinacas, lentejas). Consulte a un médico para análisis.",
-    "Insomnio": "Mantenga una rutina de sueño regular. Evite pantallas y cafeína antes de dormir.",
-}
+
+def _load_kb_from_json_files() -> Tuple[Dict[str, Dict[str, float]], Dict[str, str]]:
+    """Carga diagnósticos desde `ai_data/*.json`.
+
+    Estructura esperada por archivo:
+    {
+      "diagnoses": {
+        "Nombre": {"symptoms": {"sintoma": 0.3}, "recommendation": "..."}
+      }
+    }
+    """
+    data_dir = Path(__file__).with_name("ai_data")
+    if not data_dir.exists() or not data_dir.is_dir():
+        return {}, {}
+
+    merged_kb: Dict[str, Dict[str, float]] = {}
+    merged_recs: Dict[str, str] = {}
+
+    for path in sorted(data_dir.glob("*.json")):
+        # Permite tener archivos de ejemplo/documentación
+        if path.name.endswith(".example.json"):
+            continue
+
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            raise ValueError(f"No se pudo leer JSON: {path.name}. Error: {exc}") from exc
+
+        diagnoses = payload.get("diagnoses")
+        if not isinstance(diagnoses, dict):
+            raise ValueError(f"Formato inválido en {path.name}: falta 'diagnoses' (dict).")
+
+        for diagnosis_name, diagnosis_data in diagnoses.items():
+            if not isinstance(diagnosis_name, str) or not diagnosis_name.strip():
+                raise ValueError(f"Formato inválido en {path.name}: nombre de diagnóstico vacío.")
+            if not isinstance(diagnosis_data, dict):
+                raise ValueError(f"Formato inválido en {path.name}: '{diagnosis_name}' debe ser objeto.")
+
+            symptoms = diagnosis_data.get("symptoms")
+            recommendation = diagnosis_data.get("recommendation")
+
+            if not isinstance(symptoms, dict) or not symptoms:
+                raise ValueError(f"Formato inválido en {path.name}: '{diagnosis_name}.symptoms' debe ser dict no vacío.")
+            if not isinstance(recommendation, str) or not recommendation.strip():
+                raise ValueError(f"Formato inválido en {path.name}: '{diagnosis_name}.recommendation' debe ser string.")
+
+            # Normalizamos: lower + trim
+            normalized_symptoms: Dict[str, float] = {}
+            for symptom_name, weight in symptoms.items():
+                if not isinstance(symptom_name, str) or not symptom_name.strip():
+                    raise ValueError(f"Formato inválido en {path.name}: síntoma vacío en '{diagnosis_name}'.")
+                if not isinstance(weight, (int, float)):
+                    raise ValueError(f"Formato inválido en {path.name}: peso no numérico para '{diagnosis_name}.{symptom_name}'.")
+                if weight < 0:
+                    raise ValueError(f"Formato inválido en {path.name}: peso negativo para '{diagnosis_name}.{symptom_name}'.")
+                normalized_symptoms[symptom_name.strip().lower()] = float(weight)
+
+            diagnosis_key = diagnosis_name.strip()
+            if diagnosis_key in merged_kb or diagnosis_key in merged_recs:
+                raise ValueError(
+                    f"Diagnóstico duplicado '{diagnosis_key}' al cargar {path.name}. "
+                    "Renómbralo o déjalo solo en un archivo."
+                )
+
+            merged_kb[diagnosis_key] = normalized_symptoms
+            merged_recs[diagnosis_key] = recommendation.strip()
+
+    return merged_kb, merged_recs
+
+
+# Preferimos datasets externos (JSON) si existen; si no, usamos los diccionarios embebidos.
+_json_kb, _json_recs = _load_kb_from_json_files()
+if _json_kb and _json_recs:
+    KB = _json_kb
+    RECS = _json_recs
+else:
+    # Fallback mínimo (solo si no hay datasets JSON cargados)
+    KB = {
+        "Resfriado Común": {
+            "tos": 0.30,
+            "congestion nasal": 0.30,
+            "dolor de garganta": 0.25,
+            "estornudos": 0.20,
+            "fiebre": 0.10,
+        },
+        "Migraña": {
+            "dolor de cabeza": 0.50,
+            "nauseas": 0.30,
+            "sensibilidad a la luz": 0.35,
+        },
+        "Gastroenteritis": {
+            "vomitos": 0.40,
+            "diarrea": 0.45,
+            "dolor abdominal": 0.35,
+            "fiebre": 0.20,
+        },
+    }
+    RECS = {
+        "Resfriado Común": "Hidratación constante, descanso y analgésicos de venta libre si es necesario.",
+        "Migraña": "Descanso en habitación oscura y silenciosa. Tome su medicación prescrita si la tiene.",
+        "Gastroenteritis": "Dieta blanda y suero oral para evitar deshidratación. Evite lácteos.",
+    }
 
 # --- LÓGICA DE IA (NLP) ---
 
@@ -181,6 +131,7 @@ SYNONYMS = {
     # Estomago
     "panza": "dolor abdominal", "barriga": "dolor abdominal", "tripa": "dolor abdominal", "estomago": "dolor abdominal",
     "ardor": "ardor de estomago", "acidez": "ardor de estomago", "reflujo": "ardor de estomago",
+    "boca": "dolor en boca del estomago",
     # Vomito
     "devolver": "vomitos", "guacara": "vomitos", "arqueada": "vomitos", "vomito": "vomitos",
     # Fiebre
@@ -190,6 +141,8 @@ SYNONYMS = {
     "debil": "fatiga extrema", "devil": "fatiga extrema", "sin fuerzas": "fatiga extrema", "bajon": "fatiga extrema",
     # Respirar
     "aire": "dificultad para respirar", "ahogo": "dificultad para respirar", "asfixia": "dificultad para respirar", "disnea": "dificultad para respirar",
+    "pecho": "dolor de pecho", "opresion": "opresion en el pecho", "opresión": "opresion en el pecho",
+    "silbido": "silbidos al respirar", "silbidos": "silbidos al respirar", "sibilancias": "silbidos al respirar",
     # Piel
     "ronchas": "erupcion cutanea", "granos": "erupcion cutanea", "sarpullido": "erupcion cutanea", "pica": "picazon en piel", "comezon": "picazon en piel",
     # Ojos
@@ -198,6 +151,8 @@ SYNONYMS = {
     "tragar": "dificultad para tragar", "pasar": "dificultad para tragar", "garganta": "dolor de garganta",
     "oido": "dolor de oido", "oreja": "dolor de oido", "zumbido": "dolor de oido",
     "moco": "congestion nasal", "tupido": "congestion nasal", "constipado": "congestion nasal",
+    "voz": "perdida de voz", "afonia": "perdida de voz", "afonía": "perdida de voz", "ronco": "ronquera", "ronca": "ronquera",
+    "nariz": "congestion nasal", "moqueo": "goteo nasal", "lagrimeo": "lagrimeo",
     # Muscular
     "espalda": "dolor de espalda", "cintura": "dolor lumbar", "lumbago": "dolor lumbar", "riñones": "dolor lumbar",
     "tieso": "rigidez muscular", "duro": "rigidez muscular",
@@ -205,6 +160,24 @@ SYNONYMS = {
     "sed": "sed excesiva", "seca": "boca seca", "seco": "boca seca",
     "palido": "palidez", "blanco": "palidez", "amarillo": "palidez",
     "frio": "frio", "helado": "frio",
+    "sudor": "sudoracion excesiva", "sudando": "sudoracion excesiva",
+    "confuso": "confusion", "confusa": "confusion",
+    "giro": "sensacion de giro", "girando": "sensacion de giro",
+    "hinchado": "hinchazon", "hinchada": "hinchazon", "inflamado": "hinchazon", "inflamada": "hinchazon",
+
+    # Digestivo (reflujo)
+    "regurgito": "regurgitacion", "regurgitacion": "regurgitacion", "regurgitación": "regurgitacion",
+    "amargo": "sabor amargo",
+
+    # Urinario
+    "orinar": "orinar frecuente", "pipi": "orinar frecuente", "pipí": "orinar frecuente", "baño": "orinar frecuente",
+    "arde": "ardor al orinar",
+    "urgencia": "urgencia urinaria",
+    "vientre": "dolor bajo vientre",
+    "costado": "dolor en costado", "ingle": "dolor que baja a la ingle",
+    "sangre": "orina con sangre",
+    # Digestivo
+    "estrenimiento": "estrenimiento", "estreñimiento": "estrenimiento", "estrenida": "estrenimiento", "estreñida": "estrenimiento",
     # Sueño
     "dormir": "dificultad para dormir", "despierto": "despertar nocturno", "desvelo": "dificultad para dormir"
 }
@@ -212,7 +185,7 @@ SYNONYMS = {
 # Palabras vacías en español para filtrar ruido
 STOPWORDS = {
     "el", "la", "los", "las", "un", "una", "unos", "unas", "y", "o", "pero", "si", "no", "en", "de", "del", "al", "a", "con", "sin", "por", "para",
-    "mi", "mis", "tu", "tus", "su", "sus", "me", "te", "se", "nos", "le", "les", "lo", "la", "que", "cual", "quien", "donde", "cuando", "como",
+    "mi", "mis", "tu", "tus", "su", "sus", "me", "te", "se", "nos", "le", "les", "lo", "que", "cual", "quien", "donde", "cuando", "como",
     "tengo", "siento", "mucho", "mucha", "poco", "poca", "muy", "mas", "menos", "bastante", "demasiado", "todo", "nada", "algo", "es", "son", "esta", "estan"
 }
 
@@ -363,7 +336,13 @@ def suggest_diagnoses(symptoms: List[str]) -> List[Diagnosis]:
         explanation = f"\n\n(Coincidencias detectadas: {match_str})"
         
         # Alertas de banderas rojas
-        red_flags = ["dificultad para respirar", "dolor de pecho", "perdida de conciencia"]
+        red_flags = [
+            "dificultad para respirar",
+            "dolor de pecho",
+            "perdida de conciencia",
+            "orina con sangre",
+            "fiebre alta",
+        ]
         is_urgent = any(rf in matches for rf in red_flags)
         
         prefix = "⚠️ ATENCIÓN MÉDICA RECOMENDADA. " if is_urgent else ""

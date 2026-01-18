@@ -1,0 +1,38 @@
+{
+  "diagnoses": {
+    "Infección Urinaria (Cistitis)": {
+      "symptoms": {
+        "ardor al orinar": 0.55,
+        "urgencia urinaria": 0.45,
+        "orinar frecuente": 0.40,
+        "dolor bajo vientre": 0.35,
+        "orina con mal olor": 0.30,
+        "orina turbia": 0.30
+      },
+      "recommendation": "Aumente la ingesta de agua. Evite irritantes (café/alcohol). Consulte a un médico para tratamiento, especialmente si hay fiebre."
+    },
+    "Infección Urinaria Alta (Pielonefritis)": {
+      "symptoms": {
+        "fiebre": 0.40,
+        "escalofrios": 0.30,
+        "dolor lumbar": 0.50,
+        "dolor en costado": 0.40,
+        "nauseas": 0.30,
+        "vomitos": 0.25,
+        "ardor al orinar": 0.30
+      },
+      "recommendation": "Requiere atención médica urgente y antibióticos. Acuda a un centro de salud, especialmente si hay fiebre alta o vómitos."
+    },
+    "Cólico Renal (Posible)": {
+      "symptoms": {
+        "dolor en costado": 0.55,
+        "dolor que baja a la ingle": 0.50,
+        "dolor intenso": 0.45,
+        "nauseas": 0.30,
+        "orina con sangre": 0.45,
+        "inquietud": 0.25
+      },
+      "recommendation": "Dolor intenso tipo cólico requiere valoración médica. Acuda a urgencias si el dolor es muy fuerte, hay fiebre o vómitos persistentes."
+    }
+  }
+}

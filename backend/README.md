@@ -22,11 +22,18 @@ uvicorn app.main:app --reload --port 8000
 
 ## Variables de entorno
 
-Crea un archivo `.env` basado en `.env.example`:
+Crea un archivo `.env` con UNA de estas opciones:
 
-- SUPABASE_URL=
-- SUPABASE_ANON_KEY=
-- DATABASE_URL= (opcional si usas Supabase solo)
+- Opción A (recomendada):
+	- DATABASE_URL=mysql+pymysql://root:@localhost:3306/usabilidad-proyecto
+
+- Opción B (equivalente, por partes):
+	- DB_USER=root
+	- DB_PASSWORD=
+	- DB_HOST=localhost
+	- DB_PORT=3306
+	- DB_NAME=usabilidad-proyecto
+
 - ALLOWED_ORIGINS=http://localhost:5173
 
 ## Endpoints

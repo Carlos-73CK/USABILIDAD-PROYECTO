@@ -1,0 +1,60 @@
+{
+  "diagnoses": {
+    "Contractura Muscular / Lumbalgia": {
+      "symptoms": {
+        "dolor de espalda": 0.50,
+        "rigidez muscular": 0.40,
+        "dolor al moverse": 0.35,
+        "dolor lumbar": 0.45,
+        "tension muscular": 0.30
+      },
+      "recommendation": "Calor local, estiramientos suaves y evitar levantar peso. Mejore su postura. Consulte si el dolor es severo o dura más de 2 semanas."
+    },
+    "Deshidratación": {
+      "symptoms": {
+        "sed excesiva": 0.50,
+        "boca seca": 0.45,
+        "orina oscura": 0.40,
+        "mareo": 0.35,
+        "fatiga extrema": 0.30,
+        "dolor de cabeza": 0.25
+      },
+      "recommendation": "Beba agua o suero oral en pequeños sorbos constantes. Evite el sol directo. Si hay confusión o desmayo, acuda a urgencias."
+    },
+    "Anemia (Sospecha)": {
+      "symptoms": {
+        "palidez": 0.45,
+        "fatiga extrema": 0.45,
+        "mareo": 0.35,
+        "frio": 0.30,
+        "debilidad": 0.35,
+        "dificultad para respirar": 0.25
+      },
+      "recommendation": "Consuma alimentos ricos en hierro (carnes rojas, espinacas, lentejas). Consulte a un médico para análisis de sangre."
+    },
+    "Hipoglucemia (Baja de Azúcar)": {
+      "symptoms": {
+        "sudor frio": 0.40,
+        "temblores": 0.35,
+        "mareo": 0.30,
+        "hambre intensa": 0.35,
+        "palpitaciones": 0.25,
+        "debilidad": 0.30,
+        "confusion": 0.40
+      },
+      "recommendation": "Si está consciente, consuma azúcar de acción rápida (jugo, caramelos). Si hay desmayo o confusión marcada, busque atención médica."
+    },
+    "Golpe de Calor / Agotamiento por Calor": {
+      "symptoms": {
+        "dolor de cabeza": 0.30,
+        "mareo": 0.35,
+        "nauseas": 0.30,
+        "debilidad": 0.35,
+        "sed excesiva": 0.30,
+        "piel caliente": 0.40,
+        "sudoracion excesiva": 0.30
+      },
+      "recommendation": "Mueva a un lugar fresco, hidrate en pequeños sorbos y use compresas frías. Si hay confusión, desmayo o fiebre alta, acuda a urgencias."
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "diagnoses": {
+    "Síntomas Premenstruales (SPM)": {
+      "symptoms": {
+        "dolor abdominal bajo": 0.40,
+        "cambios de humor": 0.35,
+        "dolor de cabeza": 0.25,
+        "dolor en senos": 0.35,
+        "fatiga extrema": 0.25,
+        "distension abdominal": 0.30
+      },
+      "recommendation": "Ejercicio suave, reduzca sal/cafeína y aplique calor local. Consulte si el dolor es muy intenso o afecta su vida diaria."
+    },
+    "Cólicos Menstruales": {
+      "symptoms": {
+        "dolor pelvico": 0.55,
+        "dolor abdominal bajo": 0.50,
+        "dolor de espalda": 0.30,
+        "nauseas": 0.25,
+        "dolor tipo colico": 0.40
+      },
+      "recommendation": "Calor local en abdomen, analgésicos (ibuprofeno) y ejercicio suave. Consulte si es incapacitante o empeora."
+    }
+  }
+}

@@ -1,32 +1,24 @@
-# Modelo de datos (Supabase / Postgres)
+# Modelo de datos (MySQL)
 
-Tablas propuestas:
+Este proyecto usa MySQL (por ejemplo con XAMPP) vía SQLAlchemy.
+
+Tablas actuales:
 
 - users
-  - id (uuid, pk)
-  - email (unique)
-  - created_at (timestamptz)
+  - id (int, pk, autoincrement)
+  - email (varchar, unique)
+  - password_hash (varchar)
+  - full_name (varchar, nullable)
+  - created_at (datetime)
+  - failed_login_attempts (int)
+  - locked_until (datetime, nullable)
 
-- symptoms
-  - id (uuid, pk)
-  - name (text, unique)
+- history
+  - id (int, pk, autoincrement)
+  - user_id (int, fk -> users.id)
+  - symptoms (text)
+  - diagnosis_result (text, nullable)
+  - created_at (datetime)
 
-- conditions
-  - id (uuid, pk)
-  - name (text, unique)
-
-- rules
-  - id (uuid, pk)
-  - symptom_id (uuid, fk symptoms)
-  - condition_id (uuid, fk conditions)
-  - weight (float)
-
-- queries
-  - id (uuid, pk)
-  - user_id (uuid, fk users, nullable)
-  - input_symptoms (text[])
-  - result (jsonb)
-  - created_at (timestamptz)
-
-Políticas RLS
-- Habilitar RLS en `queries`, permitir `select/insert` al usuario autenticado solo sobre sus registros.
+Notas
+- El historial está asociado al usuario autenticado.

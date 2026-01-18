@@ -1,0 +1,77 @@
+{
+  "diagnoses": {
+    "Gastroenteritis": {
+      "symptoms": {
+        "nauseas": 0.35,
+        "vomitos": 0.45,
+        "diarrea": 0.50,
+        "dolor abdominal": 0.35,
+        "fiebre": 0.20,
+        "malestar general": 0.20
+      },
+      "recommendation": "Dieta blanda y suero oral para evitar deshidratación. Evite lácteos. Consulte si hay sangre en heces o deshidratación severa."
+    },
+    "Indigestión / Acidez": {
+      "symptoms": {
+        "ardor de estomago": 0.45,
+        "gases": 0.30,
+        "sensacion de llenura": 0.35,
+        "eructos": 0.25,
+        "dolor abdominal": 0.20
+      },
+      "recommendation": "Evite comidas pesadas, picantes o grasas. No se acueste inmediatamente después de comer."
+    },
+    "Gastritis": {
+      "symptoms": {
+        "ardor de estomago": 0.40,
+        "dolor abdominal": 0.30,
+        "dolor en la boca del estomago": 0.40,
+        "nauseas": 0.30,
+        "sensacion de llenura": 0.25
+      },
+      "recommendation": "Evite alcohol, café y comidas irritantes. Si el dolor es intenso o persistente, consulte a un médico."
+    },
+    "Reflujo Gastroesofágico (ERGE)": {
+      "symptoms": {
+        "ardor de estomago": 0.40,
+        "regurgitacion": 0.40,
+        "sabor amargo": 0.30,
+        "tos nocturna": 0.25,
+        "dolor de pecho": 0.20
+      },
+      "recommendation": "Evite comidas grasosas/picantes, no se acueste 2-3h después de comer y eleve la cabecera. Consulte si hay dolor de pecho fuerte."
+    },
+    "Intoxicación Alimentaria": {
+      "symptoms": {
+        "nauseas": 0.35,
+        "vomitos": 0.45,
+        "diarrea": 0.40,
+        "dolor abdominal": 0.35,
+        "fiebre": 0.20,
+        "malestar general": 0.25
+      },
+      "recommendation": "Hidratación con suero oral y dieta blanda. Si hay sangre en heces, fiebre alta o deshidratación, consulte de inmediato."
+    },
+    "Estreñimiento": {
+      "symptoms": {
+        "dificultad para evacuar": 0.50,
+        "heces duras": 0.40,
+        "dolor abdominal": 0.25,
+        "distension abdominal": 0.30,
+        "gases": 0.25
+      },
+      "recommendation": "Aumente fibra y agua. Actividad física suave. Consulte si hay dolor severo o ausencia de evacuación por más de 5 días."
+    },
+    "Síndrome de Intestino Irritable (SII)": {
+      "symptoms": {
+        "dolor abdominal": 0.40,
+        "gases": 0.30,
+        "distension abdominal": 0.35,
+        "diarrea": 0.25,
+        "estrenimiento": 0.25,
+        "alivio tras evacuar": 0.30
+      },
+      "recommendation": "Identifique alimentos desencadenantes y maneje el estrés. Consulte para descartar otras causas."
+    }
+  }
+}

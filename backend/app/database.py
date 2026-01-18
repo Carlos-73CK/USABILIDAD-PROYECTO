@@ -14,9 +14,15 @@ DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "3306")
 DB_NAME = os.getenv("DB_NAME", "usabilidad-proyecto")
 
-SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+# --- MODO DESARROLLO: SQLite local (sin dependencia de XAMPP) ---
+# Para volver a MySQL, descomenta la línea mysql y comenta la de sqlite
+# SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./app_local.db"
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False}  # Solo necesario para SQLite
+)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()

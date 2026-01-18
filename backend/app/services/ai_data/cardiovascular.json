@@ -1,0 +1,36 @@
+{
+  "diagnoses": {
+    "Hipertensión (Sospecha)": {
+      "symptoms": {
+        "dolor de cabeza": 0.30,
+        "mareo": 0.25,
+        "palpitaciones": 0.25,
+        "fatiga extrema": 0.20,
+        "vision borrosa": 0.20,
+        "sangrado nasal": 0.20
+      },
+      "recommendation": "Mida su presión arterial regularmente. Reduzca sal/estrés. Consulte a médico para confirmación y tratamiento."
+    },
+    "Dolor Torácico (Precaución)": {
+      "symptoms": {
+        "dolor de pecho": 0.55,
+        "opresion en el pecho": 0.50,
+        "dolor en brazo izquierdo": 0.45,
+        "dificultad para respirar": 0.40,
+        "sudor frio": 0.35,
+        "nauseas": 0.25
+      },
+      "recommendation": "⚠️ URGENTE: Dolor de pecho con sudoración fría, dolor en brazo o dificultad para respirar requiere atención de emergencia INMEDIATA. Llame al 911."
+    },
+    "Arritmia / Palpitaciones": {
+      "symptoms": {
+        "palpitaciones": 0.55,
+        "latidos irregulares": 0.50,
+        "mareo": 0.30,
+        "sensacion de ahogo": 0.25,
+        "fatiga extrema": 0.25
+      },
+      "recommendation": "Si son ocasionales y breves sin otros síntomas, observe y reduzca cafeína. Si son frecuentes o con desmayo, consulte urgente."
+    }
+  }
+}

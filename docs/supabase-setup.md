@@ -1,70 +1,24 @@
-# Guía de conexión a Supabase
+# Nota: Supabase no se usa
 
-## 1) Crear proyecto
-- Ve a https://supabase.com y crea un proyecto (elige la base gratuita).
-- Copia `Project URL` y `Anon Key` de Settings → API.
+Esta guía quedó de una versión anterior del proyecto.
 
-## 2) Variables de entorno
-- Backend: copia `.env.example` a `.env` y rellena:
-  - SUPABASE_URL=
-  - SUPABASE_ANON_KEY=
-- Frontend: copia `.env.example` a `.env` y rellena:
-  - VITE_SUPABASE_URL=
-  - VITE_SUPABASE_ANON_KEY=
+El proyecto actual usa MySQL (por ejemplo con XAMPP) vía SQLAlchemy.
 
-## 3) Tablas mínimas
-Ejecuta en SQL Editor:
+## Setup MySQL (XAMPP)
 
-```sql
--- Requerido para gen_random_uuid()
-create extension if not exists pgcrypto;
+1) Inicia Apache y MySQL en XAMPP.
 
-create table if not exists symptoms (
-  id uuid primary key default gen_random_uuid(),
-  name text unique not null
-);
+2) Crea una base de datos, por ejemplo `usabilidad_accesibilidad`.
 
-create table if not exists conditions (
-  id uuid primary key default gen_random_uuid(),
-  name text unique not null
-);
+3) Configura el backend con `DATABASE_URL` apuntando a MySQL:
 
-create table if not exists rules (
-  id uuid primary key default gen_random_uuid(),
-  symptom_id uuid references symptoms(id) on delete cascade,
-  condition_id uuid references conditions(id) on delete cascade,
-  weight double precision not null default 0.5
-);
-
-create table if not exists queries (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid,
-  input_symptoms text[] not null,
-  result jsonb not null,
-  created_at timestamptz not null default now()
-);
+```dotenv
+DATABASE_URL=mysql+pymysql://root:@localhost:3306/usabilidad_accesibilidad
+ALLOWED_ORIGINS=http://localhost:5173
 ```
 
-## 4) Seguridad (RLS)
+4) Arranca el backend y verifica salud:
 
-```
-alter table queries enable row level security;
-create policy "own queries" on queries for select using (auth.uid() = user_id);
-create policy "insert own" on queries for insert with check (auth.uid() = user_id);
-```
+- `GET http://127.0.0.1:8000/health`
 
-Nota: Ajusta según necesidades. Puedes mantener `queries.user_id` null para consultas anónimas.
-
-## 5) Probar desde backend
-- `get_supabase()` usa `SUPABASE_URL` y `SUPABASE_ANON_KEY`.
-- Ejemplo de inserción:
-
-```python
-from app.services.supabase_client import get_supabase
-sb = get_supabase()
-sb.table('queries').insert({
-  'user_id': None,
-  'input_symptoms': ['fiebre','tos'],
-  'result': {'diagnoses': []}
-}).execute()
-```
+Si en el futuro quieres volver a Supabase, tendrás que reintroducir dependencias y ajustar el repositorio.

@@ -1,0 +1,36 @@
+{
+  "diagnoses": {
+    "Migraña": {
+      "symptoms": {
+        "dolor de cabeza": 0.50,
+        "dolor de cabeza intenso": 0.45,
+        "nauseas": 0.35,
+        "sensibilidad a la luz": 0.40,
+        "sensibilidad al ruido": 0.30,
+        "vision borrosa": 0.25
+      },
+      "recommendation": "Descanso en habitación oscura y silenciosa. Tome su medicación prescrita si la tiene. Consulte si es el peor dolor de cabeza de su vida."
+    },
+    "Cefalea Tensional": {
+      "symptoms": {
+        "dolor de cabeza": 0.45,
+        "tension en el cuello": 0.40,
+        "estres": 0.35,
+        "ansiedad": 0.25,
+        "mala postura": 0.25
+      },
+      "recommendation": "Realice estiramientos de cuello, mejore su postura y tome pausas activas. Analgésicos de venta libre pueden ayudar."
+    },
+    "Vértigo": {
+      "symptoms": {
+        "mareo": 0.50,
+        "sensacion de giro": 0.50,
+        "nauseas": 0.30,
+        "vomitos": 0.25,
+        "inestabilidad": 0.30,
+        "zumbido en oido": 0.25
+      },
+      "recommendation": "Si el mareo es intenso, hay dificultad para hablar o debilidad en un lado, busque atención urgente. Si no, descanse y consulte."
+    }
+  }
+}
