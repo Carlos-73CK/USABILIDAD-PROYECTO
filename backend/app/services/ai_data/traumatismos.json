@@ -1,0 +1,78 @@
+{
+  "diagnoses": {
+    "Contusión / Golpe": {
+      "symptoms": {
+        "dolor": 0.45,
+        "hinchazon": 0.45,
+        "moretones": 0.50,
+        "sensibilidad al tacto": 0.40
+      },
+      "recommendation": "Aplique hielo envuelto en tela por 15-20 min cada 2-3 horas. Reposo y elevación. Consulte si el dolor es muy intenso o hay deformidad."
+    },
+    "Esguince de Muñeca": {
+      "symptoms": {
+        "dolor de muneca": 0.55,
+        "hinchazon": 0.45,
+        "dificultad para mover muneca": 0.45,
+        "moretones": 0.30
+      },
+      "recommendation": "Reposo, hielo, compresión y elevación (RICE). Use muñequera si es necesario. Consulte si no puede mover la muñeca o el dolor es severo."
+    },
+    "Fractura (Sospecha)": {
+      "symptoms": {
+        "dolor intenso": 0.55,
+        "deformidad": 0.55,
+        "hinchazon": 0.45,
+        "incapacidad de mover": 0.50,
+        "moretones": 0.35,
+        "crujido al lesionarse": 0.40
+      },
+      "recommendation": "⚠️ URGENTE: No mueva el miembro afectado. Inmovilice y acuda a urgencias para radiografía y tratamiento."
+    },
+    "Corte / Herida": {
+      "symptoms": {
+        "sangrado": 0.55,
+        "dolor en herida": 0.45,
+        "herida abierta": 0.50
+      },
+      "recommendation": "Lave con agua y jabón, aplique presión para detener sangrado. Use vendaje limpio. Consulte si es profunda, no para de sangrar o tiene bordes irregulares."
+    },
+    "Quemadura Leve": {
+      "symptoms": {
+        "dolor en piel": 0.50,
+        "enrojecimiento": 0.50,
+        "hinchazon": 0.35,
+        "piel sensible": 0.40
+      },
+      "recommendation": "Enfríe con agua fría (no helada) por 10-20 min. Aplique crema para quemaduras. Consulte si hay ampollas grandes o afecta cara/manos/genitales."
+    },
+    "Torcedura de Cuello (Latigazo Cervical)": {
+      "symptoms": {
+        "dolor de cuello": 0.55,
+        "rigidez cervical": 0.50,
+        "dolor de cabeza": 0.40,
+        "mareo": 0.30,
+        "dolor al girar cabeza": 0.45
+      },
+      "recommendation": "Descanse, aplique calor/hielo alternado. Evite movimientos bruscos. Consulte si hay hormigueo en brazos, debilidad o dolor severo."
+    },
+    "Luxación (Sospecha)": {
+      "symptoms": {
+        "dolor intenso": 0.55,
+        "deformidad visible": 0.55,
+        "incapacidad de mover": 0.50,
+        "hinchazon": 0.40
+      },
+      "recommendation": "⚠️ URGENTE: No intente recolocar el hueso. Inmovilice la articulación y acuda a urgencias inmediatamente."
+    },
+    "Mordedura de Animal": {
+      "symptoms": {
+        "herida por mordedura": 0.55,
+        "sangrado": 0.45,
+        "dolor": 0.45,
+        "hinchazon": 0.35
+      },
+      "recommendation": "Lave con agua y jabón abundante. Consulte SIEMPRE por riesgo de infección y rabia, especialmente si el animal es desconocido."
+    }
+  }
+}

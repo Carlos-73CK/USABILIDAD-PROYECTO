@@ -1,5 +1,57 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Mic, MicOff, Plus, X, Search, ArrowRight } from 'lucide-react'
+
+// Lista de síntomas conocidos para autocompletado
+const KNOWN_SYMPTOMS = [
+  // Generales
+  'fiebre', 'fiebre alta', 'fiebre leve', 'escalofríos', 'sudoración nocturna',
+  'fatiga', 'cansancio', 'debilidad', 'malestar general', 'pérdida de peso',
+  'pérdida de apetito', 'sed excesiva', 'deshidratación',
+  
+  // Respiratorios
+  'tos', 'tos seca', 'tos con flema', 'dificultad para respirar', 'falta de aire',
+  'sibilancias', 'dolor al respirar', 'congestión nasal', 'secreción nasal',
+  'estornudos', 'ronquera', 'dolor de garganta', 'garganta irritada',
+  
+  // Cabeza y neurológicos
+  'dolor de cabeza', 'cefalea', 'migraña', 'mareo', 'vértigo', 'náuseas',
+  'vómitos', 'confusión', 'pérdida de memoria', 'dificultad para concentrarse',
+  'visión borrosa', 'sensibilidad a la luz', 'zumbido en oídos',
+  
+  // Digestivos
+  'dolor abdominal', 'dolor de estómago', 'acidez', 'reflujo', 'hinchazón abdominal',
+  'gases', 'diarrea', 'estreñimiento', 'sangre en heces', 'náuseas', 'vómitos',
+  'pérdida de apetito', 'dificultad para tragar',
+  
+  // Musculoesqueléticos
+  'dolor muscular', 'dolor de espalda', 'dolor lumbar', 'dolor de cuello',
+  'rigidez muscular', 'calambres', 'dolor articular', 'inflamación articular',
+  'debilidad muscular', 'dolor en extremidades', 'entumecimiento', 'hormigueo',
+  
+  // Piel
+  'erupción cutánea', 'picazón', 'urticaria', 'enrojecimiento de piel',
+  'piel seca', 'descamación', 'ampollas', 'moretones', 'palidez',
+  
+  // Cardiovasculares
+  'dolor en el pecho', 'palpitaciones', 'taquicardia', 'presión arterial alta',
+  'hinchazón de piernas', 'hinchazón de tobillos', 'falta de aire al acostarse',
+  
+  // Urinarios
+  'ardor al orinar', 'micción frecuente', 'urgencia urinaria', 'sangre en orina',
+  'orina oscura', 'dolor en riñones', 'incontinencia',
+  
+  // Ojos y oídos
+  'ojos rojos', 'lagrimeo', 'secreción ocular', 'dolor de oído',
+  'pérdida de audición', 'picazón en ojos', 'sensibilidad a la luz',
+  
+  // Psicológicos
+  'ansiedad', 'nerviosismo', 'tristeza', 'insomnio', 'dificultad para dormir',
+  'irritabilidad', 'cambios de humor', 'falta de energía', 'estrés',
+  
+  // Otros
+  'ganglios inflamados', 'pérdida del olfato', 'pérdida del gusto',
+  'dolor de mandíbula', 'sangrado de encías', 'mal aliento'
+]
 
 type Props = Readonly<{
   onSubmit: (symptoms: string[]) => void
@@ -11,6 +63,77 @@ export function SymptomForm({ onSubmit, disabled, lang = 'es' }: Props) {
   const [input, setInput] = useState('')
   const [list, setList] = useState<string[]>([])
   const [listening, setListening] = useState(false)
+  
+  // Estados para autocompletado
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [selectedIndex, setSelectedIndex] = useState(-1)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const suggestionsRef = useRef<HTMLDivElement>(null)
+
+  // Filtrar sugerencias basadas en el input
+  useEffect(() => {
+    if (input.trim().length >= 2) {
+      const filtered = KNOWN_SYMPTOMS.filter(symptom => 
+        symptom.toLowerCase().includes(input.toLowerCase()) &&
+        !list.includes(symptom)
+      ).slice(0, 8) // Limitar a 8 sugerencias
+      setSuggestions(filtered)
+      setShowSuggestions(filtered.length > 0)
+      setSelectedIndex(-1)
+    } else {
+      setSuggestions([])
+      setShowSuggestions(false)
+    }
+  }, [input, list])
+
+  // Cerrar sugerencias al hacer clic fuera
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        suggestionsRef.current && 
+        !suggestionsRef.current.contains(event.target as Node) &&
+        inputRef.current &&
+        !inputRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  function selectSuggestion(symptom: string) {
+    if (!list.includes(symptom)) {
+      setList(l => [...l, symptom])
+    }
+    setInput('')
+    setShowSuggestions(false)
+    inputRef.current?.focus()
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (showSuggestions && suggestions.length > 0) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        setSelectedIndex(prev => (prev < suggestions.length - 1 ? prev + 1 : 0))
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        setSelectedIndex(prev => (prev > 0 ? prev - 1 : suggestions.length - 1))
+      } else if (e.key === 'Enter' && selectedIndex >= 0) {
+        e.preventDefault()
+        selectSuggestion(suggestions[selectedIndex])
+      } else if (e.key === 'Escape') {
+        setShowSuggestions(false)
+      } else if (e.key === 'Enter' && selectedIndex === -1) {
+        e.preventDefault()
+        addSymptom()
+      }
+    } else if (e.key === 'Enter') {
+      e.preventDefault()
+      addSymptom()
+    }
+  }
 
   const L = {
     es: {
@@ -18,8 +141,8 @@ export function SymptomForm({ onSubmit, disabled, lang = 'es' }: Props) {
       add: 'Añadir',
       remove: 'Quitar',
       submit: 'Analizar Síntomas',
-      help: 'Escribe un síntoma y pulsa «Añadir». Ej.: fiebre, tos.',
-      placeholder: 'Ej.: fiebre alta, dolor de cabeza...',
+      help: 'Escribe un síntoma y verás sugerencias automáticas. También puedes dictar por voz.',
+      placeholder: 'Ej.: fiebre, dolor de cabeza, tos...',
       mic: 'Dictar',
       micOn: 'Escuchando...',
       empty: 'Añade al menos un síntoma para continuar.',
@@ -30,8 +153,8 @@ export function SymptomForm({ onSubmit, disabled, lang = 'es' }: Props) {
       add: 'Add',
       remove: 'Remove',
       submit: 'Analyze Symptoms',
-      help: 'Type a symptom and click “Add”. E.g.: fever, cough.',
-      placeholder: 'E.g.: high fever, headache...',
+      help: 'Type a symptom and see automatic suggestions. You can also use voice dictation.',
+      placeholder: 'E.g.: fever, headache, cough...',
       mic: 'Dictate',
       micOn: 'Listening...',
       empty: 'Add at least one symptom to continue.',
@@ -89,8 +212,9 @@ export function SymptomForm({ onSubmit, disabled, lang = 'es' }: Props) {
         <label htmlFor="symptom" className="font-medium text-slate-700 block">{L[lang].symptom}</label>
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 z-10" size={18} />
             <input
+              ref={inputRef}
               id="symptom"
               name="symptom"
               type="text"
@@ -98,15 +222,52 @@ export function SymptomForm({ onSubmit, disabled, lang = 'es' }: Props) {
               onChange={(e) => setInput(e.target.value)}
               className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
               aria-describedby="symptom-help"
+              aria-autocomplete="list"
+              aria-expanded={showSuggestions}
               disabled={disabled}
               placeholder={L[lang].placeholder}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                  addSymptom()
-                }
+              onKeyDown={handleKeyDown}
+              onFocus={() => {
+                if (suggestions.length > 0) setShowSuggestions(true)
               }}
+              autoComplete="off"
             />
+            
+            {/* Dropdown de sugerencias */}
+            {showSuggestions && suggestions.length > 0 && (
+              <div 
+                ref={suggestionsRef}
+                className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden animate-fade-in"
+                role="listbox"
+              >
+                <div className="p-2 text-xs text-slate-500 border-b border-slate-100 bg-slate-50">
+                  💡 Sugerencias ({suggestions.length})
+                </div>
+                {suggestions.map((symptom, index) => (
+                  <button
+                    key={symptom}
+                    type="button"
+                    role="option"
+                    aria-selected={index === selectedIndex}
+                    className={`
+                      w-full px-4 py-2.5 text-left text-sm transition-colors flex items-center gap-2
+                      ${index === selectedIndex 
+                        ? 'bg-teal-50 text-teal-700' 
+                        : 'hover:bg-slate-50 text-slate-700'
+                      }
+                    `}
+                    onClick={() => selectSuggestion(symptom)}
+                    onMouseEnter={() => setSelectedIndex(index)}
+                  >
+                    <span className="text-teal-500">+</span>
+                    <span>{symptom}</span>
+                  </button>
+                ))}
+                <div className="p-2 text-xs text-slate-400 border-t border-slate-100 bg-slate-50">
+                  ↑↓ navegar • Enter seleccionar • Esc cerrar
+                </div>
+              </div>
+            )}
           </div>
           
           <button

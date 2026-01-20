@@ -1,0 +1,73 @@
+{
+  "diagnoses": {
+    "Ojo Seco": {
+      "symptoms": {
+        "sequedad ocular": 0.55,
+        "ardor en ojos": 0.45,
+        "sensacion de arenilla": 0.50,
+        "ojos cansados": 0.35,
+        "vision borrosa": 0.25
+      },
+      "recommendation": "Use lágrimas artificiales, descanse la vista cada 20 minutos y evite ambientes secos. Consulte si persiste."
+    },
+    "Blefaritis": {
+      "symptoms": {
+        "parpados hinchados": 0.50,
+        "costras en pestanas": 0.45,
+        "picazon en parpados": 0.40,
+        "ojo rojo": 0.35,
+        "sensacion de cuerpo extrano": 0.30
+      },
+      "recommendation": "Limpie los párpados con compresas tibias y jabón neutro. Consulte al oftalmólogo si no mejora."
+    },
+    "Orzuelo": {
+      "symptoms": {
+        "bulto en parpado": 0.55,
+        "dolor en parpado": 0.50,
+        "hinchazon": 0.45,
+        "enrojecimiento": 0.40,
+        "sensibilidad al tacto": 0.35
+      },
+      "recommendation": "Aplique compresas tibias 4 veces al día. No exprima el orzuelo. Consulte si no mejora en 1 semana o hay fiebre."
+    },
+    "Fatiga Visual (Astenopia)": {
+      "symptoms": {
+        "ojos cansados": 0.55,
+        "dolor de cabeza": 0.40,
+        "vision borrosa": 0.35,
+        "sequedad ocular": 0.30,
+        "dificultad para enfocar": 0.40
+      },
+      "recommendation": "Siga la regla 20-20-20: cada 20 min mire algo a 20 pies durante 20 seg. Ajuste brillo de pantallas y consulte para examen visual."
+    },
+    "Chalazión": {
+      "symptoms": {
+        "bulto en parpado": 0.50,
+        "hinchazon": 0.40,
+        "parpado pesado": 0.35,
+        "sin dolor": 0.30
+      },
+      "recommendation": "Diferente al orzuelo, no suele doler. Aplique compresas tibias. Si persiste más de 1 mes, puede requerir drenaje médico."
+    },
+    "Glaucoma Agudo (Sospecha)": {
+      "symptoms": {
+        "dolor ocular intenso": 0.55,
+        "vision borrosa": 0.45,
+        "halos alrededor de luces": 0.50,
+        "nauseas": 0.35,
+        "vomitos": 0.30,
+        "ojo rojo": 0.40
+      },
+      "recommendation": "⚠️ URGENCIA: Dolor ocular severo con náuseas y halos luminosos requiere atención oftalmológica INMEDIATA para prevenir pérdida de visión."
+    },
+    "Desprendimiento de Vítreo": {
+      "symptoms": {
+        "moscas volantes": 0.55,
+        "destellos de luz": 0.50,
+        "sombras en vision": 0.40,
+        "vision borrosa": 0.30
+      },
+      "recommendation": "Común con la edad, pero si aparece súbitamente con muchos destellos, consulte urgente para descartar desprendimiento de retina."
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "diagnoses": {
+    "Varicela": {
+      "symptoms": {
+        "fiebre": 0.35,
+        "erupcion cutanea": 0.55,
+        "ampollas": 0.50,
+        "picazon en piel": 0.45,
+        "malestar general": 0.30,
+        "dolor de cabeza": 0.20
+      },
+      "recommendation": "Mantener al niño en casa para evitar contagios. Usar lociones calmantes para la picazón. Consultar si hay fiebre muy alta o lesiones infectadas."
+    },
+    "Escarlatina": {
+      "symptoms": {
+        "fiebre": 0.45,
+        "dolor de garganta": 0.45,
+        "erupcion cutanea": 0.50,
+        "lengua de fresa": 0.40,
+        "enrojecimiento facial": 0.35
+      },
+      "recommendation": "Requiere tratamiento con antibióticos. Consulte al pediatra lo antes posible para evitar complicaciones."
+    },
+    "Otitis Media Infantil": {
+      "symptoms": {
+        "dolor de oido": 0.55,
+        "fiebre": 0.35,
+        "irritabilidad": 0.40,
+        "llanto nocturno": 0.35,
+        "falta de apetito": 0.30,
+        "tirar de la oreja": 0.40
+      },
+      "recommendation": "Consultar al pediatra. Puede requerir antibióticos. Evitar mojar el oído y aplicar calor seco local."
+    },
+    "Mano-Pie-Boca": {
+      "symptoms": {
+        "fiebre": 0.35,
+        "llagas en boca": 0.55,
+        "ampollas en manos": 0.50,
+        "ampollas en pies": 0.50,
+        "dolor al comer": 0.40,
+        "irritabilidad": 0.30
+      },
+      "recommendation": "Enfermedad viral que se resuelve sola en 7-10 días. Mantener hidratación y dar alimentos blandos. Consultar si hay deshidratación."
+    },
+    "Crup (Laringotraqueitis)": {
+      "symptoms": {
+        "tos de perro": 0.60,
+        "ronquera": 0.45,
+        "dificultad para respirar": 0.40,
+        "estridor": 0.50,
+        "fiebre": 0.25
+      },
+      "recommendation": "Aire fresco o vapor pueden ayudar. Si hay dificultad respiratoria marcada o labios azulados, acudir a urgencias inmediatamente."
+    },
+    "Bronquiolitis": {
+      "symptoms": {
+        "tos": 0.40,
+        "silbidos al respirar": 0.50,
+        "dificultad para respirar": 0.45,
+        "fiebre": 0.30,
+        "congestion nasal": 0.35,
+        "falta de apetito": 0.30
+      },
+      "recommendation": "Común en bebés menores de 2 años. Mantener hidratación y observar la respiración. Acudir a urgencias si hay tiraje o dificultad marcada."
+    },
+    "Dermatitis del Pañal": {
+      "symptoms": {
+        "enrojecimiento en zona del panal": 0.55,
+        "irritacion": 0.45,
+        "llanto al cambiar panal": 0.40,
+        "piel irritada": 0.45
+      },
+      "recommendation": "Cambiar el pañal frecuentemente, mantener la zona seca y usar cremas protectoras. Consultar si hay lesiones con pus o no mejora en 3 días."
+    },
+    "Fiebre en Niños (Síndrome Febril)": {
+      "symptoms": {
+        "fiebre": 0.55,
+        "irritabilidad": 0.35,
+        "falta de apetito": 0.30,
+        "malestar general": 0.35,
+        "llanto": 0.25
+      },
+      "recommendation": "Administrar antitérmicos según peso. Mantener hidratación. Consultar si fiebre >39°C persiste, hay manchas en piel, o el niño está muy decaído."
+    }
+  }
+}

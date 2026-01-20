@@ -1,0 +1,58 @@
+{
+  "diagnoses": {
+    "Depresión (Sospecha)": {
+      "symptoms": {
+        "tristeza persistente": 0.55,
+        "perdida de interes": 0.50,
+        "fatiga extrema": 0.40,
+        "cambios de apetito": 0.35,
+        "insomnio": 0.35,
+        "dificultad para concentrarse": 0.35,
+        "sentimientos de culpa": 0.30
+      },
+      "recommendation": "Busque apoyo profesional de un psicólogo o psiquiatra. No está solo/a. Líneas de ayuda: teléfono de la esperanza disponible 24/7."
+    },
+    "Trastorno de Adaptación": {
+      "symptoms": {
+        "ansiedad": 0.45,
+        "tristeza": 0.40,
+        "dificultad para concentrarse": 0.35,
+        "irritabilidad": 0.35,
+        "cambios de humor": 0.30
+      },
+      "recommendation": "Suele relacionarse con eventos estresantes. Técnicas de relajación, ejercicio y apoyo social ayudan. Considere terapia si persiste."
+    },
+    "Burnout (Agotamiento Laboral)": {
+      "symptoms": {
+        "fatiga extrema": 0.50,
+        "desmotivacion": 0.50,
+        "irritabilidad": 0.40,
+        "dificultad para concentrarse": 0.40,
+        "insomnio": 0.35,
+        "dolor de cabeza": 0.30
+      },
+      "recommendation": "Establezca límites laborales, tome descansos y considere hablar con su empleador. Busque apoyo profesional si afecta su vida."
+    },
+    "Fobia Social": {
+      "symptoms": {
+        "miedo a situaciones sociales": 0.55,
+        "ansiedad": 0.45,
+        "palpitaciones": 0.35,
+        "sudoracion excesiva": 0.35,
+        "temblores": 0.30,
+        "evitacion social": 0.45
+      },
+      "recommendation": "La terapia cognitivo-conductual es muy efectiva. No evite las situaciones, enfréntelas gradualmente con apoyo profesional."
+    },
+    "Trastorno Obsesivo-Compulsivo (TOC) (Sospecha)": {
+      "symptoms": {
+        "pensamientos repetitivos": 0.55,
+        "rituales compulsivos": 0.55,
+        "ansiedad": 0.45,
+        "necesidad de orden extremo": 0.40,
+        "lavado de manos excesivo": 0.40
+      },
+      "recommendation": "Busque evaluación por un profesional de salud mental. El tratamiento con terapia y/o medicación es muy efectivo."
+    }
+  }
+}

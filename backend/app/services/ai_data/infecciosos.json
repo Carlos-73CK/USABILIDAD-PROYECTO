@@ -1,0 +1,90 @@
+{
+  "diagnoses": {
+    "Mononucleosis": {
+      "symptoms": {
+        "fatiga extrema": 0.55,
+        "dolor de garganta": 0.45,
+        "fiebre": 0.40,
+        "ganglios inflamados": 0.50,
+        "dolor muscular": 0.30,
+        "malestar general": 0.35
+      },
+      "recommendation": "Reposo prolongado, hidratación y analgésicos. Evite deportes de contacto por riesgo de rotura de bazo. Puede durar semanas."
+    },
+    "Dengue (Sospecha)": {
+      "symptoms": {
+        "fiebre": 0.50,
+        "dolor muscular": 0.45,
+        "dolor detras de ojos": 0.50,
+        "dolor de cabeza": 0.40,
+        "erupcion cutanea": 0.35,
+        "nauseas": 0.30
+      },
+      "recommendation": "⚠️ IMPORTANTE: No tome aspirina ni ibuprofeno. Hidratación abundante. Consulte si hay sangrado, dolor abdominal intenso o vómitos persistentes."
+    },
+    "Herpes Zóster (Culebrilla)": {
+      "symptoms": {
+        "dolor en un lado del cuerpo": 0.55,
+        "erupcion con ampollas": 0.55,
+        "ardor en piel": 0.45,
+        "picazon en piel": 0.35,
+        "fiebre": 0.25
+      },
+      "recommendation": "Consulte pronto, el tratamiento antiviral es más efectivo si se inicia en las primeras 72 horas. No toque las lesiones."
+    },
+    "Infección por Hongos (Candidiasis)": {
+      "symptoms": {
+        "picazon": 0.50,
+        "flujo blanco": 0.45,
+        "enrojecimiento": 0.40,
+        "ardor": 0.40,
+        "irritacion": 0.35
+      },
+      "recommendation": "Tratamiento antimicótico tópico u oral según localización. Mantenga la zona seca. Consulte si es recurrente."
+    },
+    "Gastroenteritis Viral": {
+      "symptoms": {
+        "diarrea": 0.50,
+        "vomitos": 0.45,
+        "nauseas": 0.40,
+        "dolor abdominal": 0.35,
+        "fiebre": 0.30,
+        "malestar general": 0.30
+      },
+      "recommendation": "Dieta blanda, suero oral para hidratación. Evite lácteos y grasas. Consulte si hay sangre en heces, fiebre alta o deshidratación."
+    },
+    "Hepatitis A (Sospecha)": {
+      "symptoms": {
+        "fatiga extrema": 0.45,
+        "nauseas": 0.40,
+        "dolor abdominal": 0.35,
+        "orina oscura": 0.50,
+        "ictericia": 0.55,
+        "fiebre": 0.30
+      },
+      "recommendation": "Consulte al médico para confirmar diagnóstico. Reposo, evitar alcohol y medicamentos hepatotóxicos. Notificar contactos cercanos."
+    },
+    "Tuberculosis (Sospecha)": {
+      "symptoms": {
+        "tos persistente": 0.50,
+        "tos con sangre": 0.55,
+        "fiebre": 0.40,
+        "sudoracion nocturna": 0.50,
+        "perdida de peso inexplicable": 0.45,
+        "fatiga extrema": 0.35
+      },
+      "recommendation": "⚠️ IMPORTANTE: Tos de más de 2 semanas con sudoración nocturna y pérdida de peso requiere evaluación médica urgente y pruebas de tuberculosis."
+    },
+    "Influenza (Gripe Confirmada)": {
+      "symptoms": {
+        "fiebre": 0.50,
+        "escalofrios": 0.45,
+        "dolor muscular": 0.45,
+        "tos": 0.40,
+        "dolor de cabeza": 0.35,
+        "fatiga extrema": 0.40
+      },
+      "recommendation": "Reposo absoluto, hidratación abundante. Antivirales si se inician en primeras 48h. Consulte si hay dificultad respiratoria."
+    }
+  }
+}

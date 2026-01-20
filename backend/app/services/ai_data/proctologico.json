@@ -1,0 +1,34 @@
+{
+  "diagnoses": {
+    "Hemorroides": {
+      "symptoms": {
+        "dolor al defecar": 0.50,
+        "sangrado al defecar": 0.50,
+        "picazon anal": 0.45,
+        "bulto en ano": 0.45,
+        "molestia al sentarse": 0.35
+      },
+      "recommendation": "Aumente fibra y agua, evite esfuerzo al defecar. Baños de asiento tibios. Consulte si hay sangrado abundante o dolor severo."
+    },
+    "Fisura Anal": {
+      "symptoms": {
+        "dolor al defecar": 0.55,
+        "sangrado al defecar": 0.45,
+        "dolor despues de defecar": 0.50,
+        "estrenimiento": 0.30
+      },
+      "recommendation": "Aumente fibra, tome suficiente agua y use ablandadores de heces. Baños de asiento. Consulte si el dolor es muy intenso."
+    },
+    "Prostatitis (Sospecha)": {
+      "symptoms": {
+        "dolor pelvico": 0.45,
+        "ardor al orinar": 0.40,
+        "urgencia urinaria": 0.40,
+        "orinar frecuente": 0.35,
+        "dolor en zona genital": 0.40,
+        "fiebre": 0.30
+      },
+      "recommendation": "Consulte al urólogo. Puede requerir antibióticos si es bacteriana. Evite alcohol, cafeína y comidas picantes."
+    }
+  }
+}
