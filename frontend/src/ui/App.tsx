@@ -259,116 +259,211 @@ export function App() {
   function renderBody() {
     if (page === 'inicio') {
       return (
-        <div className="space-y-6 animate-fade-in">
-          {/* HERO SECTION */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-600 to-emerald-700 text-white shadow-xl">
-            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-teal-400/20 rounded-full blur-2xl" />
-            
-            <div className="relative p-8 md:p-10">
-              <h2 className="text-3xl md:text-4xl font-bold mb-2">{L[lang].homeWelcome}</h2>
-              <p className="text-teal-100 text-lg max-w-2xl">
-                {L[lang].homeIntro.replace('{email}', String(loggedIn))}
-              </p>
+        <div className="space-y-8 animate-fade-in">
+          {/* HERO SECTION - Mejorado */}
+          <div className="hero-gradient rounded-3xl text-white shadow-2xl overflow-hidden">
+            <div className="relative p-8 md:p-12">
+              {/* Decorative elements */}
+              <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-400/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
               
-              <div className="mt-8 flex flex-wrap gap-3">
-                <button 
-                  onClick={() => setPage('diagnostico')}
-                  className="px-6 py-3 bg-white text-teal-700 rounded-xl font-bold shadow-lg hover:bg-teal-50 hover:scale-105 transition-all flex items-center gap-2"
-                >
-                  <Activity size={20} />
-                  {L[lang].goDiagnose}
-                </button>
-                <button 
-                  onClick={() => setPage('historial')}
-                  className="px-6 py-3 bg-teal-800/40 text-white border border-white/20 rounded-xl font-semibold hover:bg-teal-800/60 transition-all flex items-center gap-2"
-                >
-                  <Calendar size={20} />
-                  {L[lang].viewHistory}
-                </button>
+              <div className="relative z-10 max-w-3xl">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-sm font-medium mb-6 backdrop-blur-sm">
+                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                  {lang === 'es' ? 'Sistema activo y listo' : 'System active and ready'}
+                </div>
+                
+                <h2 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+                  {L[lang].homeWelcome}, <span className="text-emerald-300">{String(loggedIn).split('@')[0]}</span>
+                </h2>
+                <p className="text-teal-100 text-lg md:text-xl max-w-2xl leading-relaxed">
+                  {lang === 'es' 
+                    ? 'Analiza tus síntomas con inteligencia artificial y obtén orientación médica preliminar en segundos.'
+                    : 'Analyze your symptoms with AI and get preliminary medical guidance in seconds.'
+                  }
+                </p>
+                
+                <div className="mt-10 flex flex-wrap gap-4">
+                  <button 
+                    onClick={() => setPage('diagnostico')}
+                    className="group px-8 py-4 bg-white text-teal-700 rounded-2xl font-bold shadow-lg hover:shadow-2xl hover:scale-105 transition-all flex items-center gap-3"
+                  >
+                    <div className="w-10 h-10 bg-teal-100 rounded-xl flex items-center justify-center group-hover:bg-teal-200 transition-colors">
+                      <Activity size={22} />
+                    </div>
+                    <div className="text-left">
+                      <div className="text-lg">{L[lang].goDiagnose}</div>
+                      <div className="text-sm text-teal-600 font-normal">{lang === 'es' ? 'Iniciar análisis' : 'Start analysis'}</div>
+                    </div>
+                    <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                  <button 
+                    onClick={() => setPage('historial')}
+                    className="px-6 py-4 bg-white/10 text-white border border-white/20 rounded-2xl font-semibold hover:bg-white/20 transition-all flex items-center gap-3 backdrop-blur-sm"
+                  >
+                    <Calendar size={22} />
+                    {L[lang].viewHistory}
+                  </button>
+                </div>
+              </div>
+              
+              {/* Stats row */}
+              <div className="relative z-10 mt-12 pt-8 border-t border-white/10 grid grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="text-3xl md:text-4xl font-bold text-white">97+</div>
+                  <div className="text-teal-200 text-sm mt-1">{lang === 'es' ? 'Diagnósticos' : 'Diagnoses'}</div>
+                </div>
+                <div className="text-center border-x border-white/10">
+                  <div className="text-3xl md:text-4xl font-bold text-white">228</div>
+                  <div className="text-teal-200 text-sm mt-1">{lang === 'es' ? 'Síntomas' : 'Symptoms'}</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl md:text-4xl font-bold text-white">24/7</div>
+                  <div className="text-teal-200 text-sm mt-1">{lang === 'es' ? 'Disponible' : 'Available'}</div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* DASHBOARD GRID */}
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* Quick Tips Card */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-              <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4">
-                <Zap size={20} />
+          {/* QUICK ACTIONS GRID */}
+          <div className="grid md:grid-cols-4 gap-4">
+            <button 
+              onClick={() => setPage('diagnostico')} 
+              className="feature-card group text-left"
+            >
+              <div className="feature-icon feature-icon-teal">
+                <Activity size={28} />
               </div>
-              <h3 className="text-lg font-bold text-slate-800 mb-2">{L[lang].quickHelp}</h3>
-              <ul className="space-y-2 text-sm text-slate-500">
-                <li className="flex items-start gap-2">
-                  <span className="mt-1 w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
-                  {L[lang].tip1}
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="mt-1 w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
-                  {L[lang].tip2}
-                </li>
-              </ul>
+              <h3 className="text-lg font-bold text-slate-800 mb-2">{lang === 'es' ? 'Nuevo Diagnóstico' : 'New Diagnosis'}</h3>
+              <p className="text-sm text-slate-500">{lang === 'es' ? 'Inicia un análisis de síntomas' : 'Start a symptom analysis'}</p>
+              <div className="mt-4 flex items-center gap-1 text-teal-600 text-sm font-medium group-hover:gap-2 transition-all">
+                {lang === 'es' ? 'Comenzar' : 'Start'} <ChevronRight size={16} />
+              </div>
+            </button>
+            
+            <button 
+              onClick={() => setPage('historial')} 
+              className="feature-card group text-left"
+            >
+              <div className="feature-icon feature-icon-blue">
+                <FileText size={28} />
+              </div>
+              <h3 className="text-lg font-bold text-slate-800 mb-2">{lang === 'es' ? 'Historial' : 'History'}</h3>
+              <p className="text-sm text-slate-500">{lang === 'es' ? 'Revisa diagnósticos anteriores' : 'Review past diagnoses'}</p>
+              <div className="mt-4 flex items-center gap-1 text-blue-600 text-sm font-medium group-hover:gap-2 transition-all">
+                {lang === 'es' ? 'Ver todo' : 'View all'} <ChevronRight size={16} />
+              </div>
+            </button>
+            
+            <button 
+              onClick={() => setPage('perfil')} 
+              className="feature-card group text-left"
+            >
+              <div className="feature-icon feature-icon-purple">
+                <Info size={28} />
+              </div>
+              <h3 className="text-lg font-bold text-slate-800 mb-2">{lang === 'es' ? 'Mi Perfil' : 'My Profile'}</h3>
+              <p className="text-sm text-slate-500">{lang === 'es' ? 'Gestiona tu información' : 'Manage your information'}</p>
+              <div className="mt-4 flex items-center gap-1 text-purple-600 text-sm font-medium group-hover:gap-2 transition-all">
+                {lang === 'es' ? 'Editar' : 'Edit'} <ChevronRight size={16} />
+              </div>
+            </button>
+            
+            <button 
+              onClick={() => setPage('ayuda')} 
+              className="feature-card group text-left"
+            >
+              <div className="feature-icon feature-icon-amber">
+                <Zap size={28} />
+              </div>
+              <h3 className="text-lg font-bold text-slate-800 mb-2">{lang === 'es' ? 'Ayuda' : 'Help'}</h3>
+              <p className="text-sm text-slate-500">{lang === 'es' ? 'Guías y tutoriales' : 'Guides and tutorials'}</p>
+              <div className="mt-4 flex items-center gap-1 text-amber-600 text-sm font-medium group-hover:gap-2 transition-all">
+                {lang === 'es' ? 'Explorar' : 'Explore'} <ChevronRight size={16} />
+              </div>
+            </button>
+          </div>
+
+          {/* INFO CARDS ROW */}
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Tips Card */}
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-lg transition-all hover:border-teal-200">
+              <div className="flex items-start gap-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-teal-100 to-emerald-100 text-teal-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <Zap size={28} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-800 mb-3">{L[lang].quickHelp}</h3>
+                  <ul className="space-y-3 text-slate-600">
+                    <li className="flex items-start gap-3">
+                      <span className="mt-2 w-2 h-2 rounded-full bg-teal-400 shrink-0" />
+                      <span>{L[lang].tip1}</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="mt-2 w-2 h-2 rounded-full bg-teal-400 shrink-0" />
+                      <span>{L[lang].tip2}</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="mt-2 w-2 h-2 rounded-full bg-teal-400 shrink-0" />
+                      <span>{L[lang].tip3}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             {/* Important Notice Card */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-              <div className="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mb-4">
-                <AlertCircle size={20} />
-              </div>
-              <h3 className="text-lg font-bold text-slate-800 mb-2">{L[lang].important}</h3>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                {L[lang].disclaimer}
-              </p>
-            </div>
-
-            {/* System Status / Artwork */}
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-2xl shadow-sm text-white relative overflow-hidden group cursor-pointer" onClick={() => setPage('ayuda')}>
-              <div className="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Info size={80} />
-              </div>
-              <div className="relative z-10">
-                <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center mb-4 backdrop-blur-sm">
-                  <Info size={20} />
+            <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-8 rounded-2xl shadow-sm border border-amber-200 hover:shadow-lg transition-all">
+              <div className="flex items-start gap-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-amber-200 to-orange-200 text-amber-700 rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <AlertCircle size={28} />
                 </div>
-                <h3 className="text-lg font-bold mb-2">{L[lang].help}</h3>
-                <p className="text-slate-400 text-sm mb-4">
-                  {lang === 'en' ? 'Need assistance? Check our guides.' : '¿Necesitas ayuda? Revisa nuestras guías.'}
-                </p>
-                <div className="flex items-center gap-2 text-sm font-medium text-teal-400 group-hover:translate-x-1 transition-transform">
-                  {lang === 'en' ? 'Go to Help' : 'Ir a Ayuda'} <ArrowRight size={16} />
+                <div>
+                  <h3 className="text-xl font-bold text-amber-900 mb-3">{L[lang].important}</h3>
+                  <p className="text-amber-800 leading-relaxed">
+                    {L[lang].disclaimer}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Recent Activity Placeholder (Visual Filler) */}
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold text-slate-800">
-                {lang === 'en' ? 'Recent Activity' : 'Actividad Reciente'}
-              </h3>
-              <button className="text-sm text-teal-600 font-medium hover:underline" onClick={() => setPage('historial')}>
-                {lang === 'en' ? 'View All' : 'Ver Todo'}
+          {/* Recent Activity Section */}
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-600">
+                  <FileText size={20} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-800">
+                  {lang === 'en' ? 'Recent Activity' : 'Actividad Reciente'}
+                </h3>
+              </div>
+              <button className="text-sm text-teal-600 font-semibold hover:text-teal-700 flex items-center gap-1 transition-colors" onClick={() => setPage('historial')}>
+                {lang === 'en' ? 'View All' : 'Ver Todo'} <ChevronRight size={16} />
               </button>
             </div>
             
-            <div className="space-y-4">
-              {[1, 2].map((_, i) => (
-                <div key={i} className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
-                  <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                    <FileText size={18} />
+            <div className="p-6">
+              <div className="space-y-1">
+                {[
+                  { icon: '🩺', title: lang === 'es' ? 'Análisis de Síntomas' : 'Symptom Analysis', time: lang === 'es' ? 'Hace 2 días' : '2 days ago', status: 'success' },
+                  { icon: '📋', title: lang === 'es' ? 'Perfil Actualizado' : 'Profile Updated', time: lang === 'es' ? 'Hace 1 semana' : '1 week ago', status: 'info' },
+                  { icon: '✅', title: lang === 'es' ? 'Cuenta Creada' : 'Account Created', time: lang === 'es' ? 'Hace 2 semanas' : '2 weeks ago', status: 'success' },
+                ].map((item, i) => (
+                  <div key={i} className="activity-item stagger-item">
+                    <div className={`activity-dot ${item.status === 'success' ? 'activity-dot-teal' : 'activity-dot-blue'}`} />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">{item.icon}</span>
+                        <span className="font-medium text-slate-700">{item.title}</span>
+                      </div>
+                      <span className="text-sm text-slate-400">{item.time}</span>
+                    </div>
+                    <ChevronRight size={18} className="text-slate-300" />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-slate-700">
-                      {lang === 'en' ? 'Symptom Check' : 'Chequeo de Síntomas'}
-                    </p>
-                    <p className="text-xs text-slate-400">
-                      {lang === 'en' ? 'Completed 2 days ago' : 'Completado hace 2 días'}
-                    </p>
-                  </div>
-                  <ChevronRight size={16} className="text-slate-300" />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -376,51 +471,128 @@ export function App() {
     }
     if (page === 'diagnostico') {
       return (
-        <section className="grid gap-6 md:grid-cols-3" aria-labelledby="form-title">
-          <div className="card md:col-span-2">
-            <div className="card-body">
-              <h2 id="form-title" className="text-xl font-semibold">{L[lang].enterSymptoms}</h2>
-              <p className="muted text-sm">{L[lang].step1}</p>
-              <div className="mt-3">
-                <GuidedQuestions onChange={onGuidedChange} disabled={loading} lang={lang} />
+        <section className="space-y-6 animate-fade-in" aria-labelledby="form-title">
+          {/* Header de diagnóstico */}
+          <div className="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-2xl p-6 text-white shadow-lg">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                <Activity size={28} />
               </div>
-              {guidedSymptoms.length > 0 && (
-                <div className="mt-2 text-sm">
-                  <p className="font-medium mb-1">{L[lang].selectedFromGuide}:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {guidedSymptoms.map((s) => (
-                      <span key={s} className="chip" aria-label={s}>{s}</span>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {redFlags.length > 0 && (
-                <div ref={alertRef} role="alert" tabIndex={-1} className={`mt-3 rounded border border-red-300 bg-red-50 text-red-800 p-3 focus:outline-none focus:ring-2 focus:ring-red-300 ${visualAlerts ? 'animate-pulse border-4 border-red-600' : ''}`}>
-                  <p className="font-medium">{L[lang].redFlagsTitle}</p>
-                  <ul className="list-disc pl-6">{redFlags.map((r) => (<li key={r}>{r}</li>))}</ul>
-                  <p className="mt-1">{L[lang].redFlagsAdvice}</p>
-                  <div className="mt-3">
-                    <label className="inline-flex items-center gap-2">
-                      <input type="checkbox" checked={ackRedFlags} onChange={(e) => setAckRedFlags(e.target.checked)} className="h-4 w-4" />
-                      <span>{L[lang].redFlagsAck}</span>
-                    </label>
-                  </div>
-                </div>
-              )}
-              <p className="muted text-sm mt-4">{L[lang].step2}</p>
-              <div className="mt-2">
-                <SymptomForm onSubmit={onSubmit} disabled={loading || (redFlags.length > 0 && !ackRedFlags)} lang={lang} />
-              </div>
-              <div className="mt-3" aria-live="polite" aria-atomic="true">
-                {loading && <p>{L[lang].processing}</p>}
-                {error && <p role="alert" className={`text-red-700 ${visualAlerts ? 'animate-pulse border-4 border-red-500 p-4 bg-red-50 font-bold text-lg' : ''}`}>{error}</p>}
-                {data && <Results data={data} lang={lang} />}
+              <div>
+                <h2 id="form-title" className="text-2xl font-bold">{L[lang].enterSymptoms}</h2>
+                <p className="text-teal-100">{lang === 'es' ? 'Completa los pasos para obtener tu análisis' : 'Complete the steps to get your analysis'}</p>
               </div>
             </div>
           </div>
-          <aside className="grid gap-4">
-            <DxSidebar lang={lang} />
-          </aside>
+
+          <div className="grid gap-6 lg:grid-cols-3">
+            {/* Panel principal */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Paso 1: Preguntas guiadas */}
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div className="bg-gradient-to-r from-slate-50 to-white p-5 border-b border-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-teal-600 text-white rounded-lg flex items-center justify-center font-bold text-sm">1</div>
+                    <div>
+                      <h3 className="font-bold text-slate-800">{L[lang].step1}</h3>
+                      <p className="text-sm text-slate-500">{lang === 'es' ? 'Responde las preguntas sobre tus síntomas' : 'Answer questions about your symptoms'}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <GuidedQuestions onChange={onGuidedChange} disabled={loading} lang={lang} />
+                </div>
+              </div>
+
+              {/* Síntomas seleccionados de guía */}
+              {guidedSymptoms.length > 0 && (
+                <div className="info-banner animate-scale-in">
+                  <div className="info-banner-icon">
+                    <Activity size={16} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-teal-800 mb-2">{L[lang].selectedFromGuide}: ({guidedSymptoms.length})</p>
+                    <div className="flex flex-wrap gap-2">
+                      {guidedSymptoms.map((s) => (
+                        <span key={s} className="inline-flex items-center gap-1.5 px-3 py-1 bg-white rounded-full text-sm font-medium text-teal-700 border border-teal-200 shadow-sm">
+                          <span className="w-1.5 h-1.5 bg-teal-500 rounded-full" />
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Alerta de banderas rojas */}
+              {redFlags.length > 0 && (
+                <div ref={alertRef} role="alert" tabIndex={-1} className={`bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl border-2 border-red-200 p-6 focus:outline-none focus:ring-2 focus:ring-red-300 ${visualAlerts ? 'animate-pulse border-4 border-red-600' : ''}`}>
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <AlertCircle size={24} />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-bold text-red-800 text-lg mb-2">{L[lang].redFlagsTitle}</p>
+                      <ul className="space-y-1 mb-4">
+                        {redFlags.map((r) => (
+                          <li key={r} className="flex items-center gap-2 text-red-700">
+                            <span className="w-1.5 h-1.5 bg-red-500 rounded-full" />
+                            {r}
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="text-red-700 mb-4">{L[lang].redFlagsAdvice}</p>
+                      <label className="inline-flex items-center gap-3 px-4 py-3 bg-white rounded-xl border border-red-200 cursor-pointer hover:bg-red-50 transition-colors">
+                        <input type="checkbox" checked={ackRedFlags} onChange={(e) => setAckRedFlags(e.target.checked)} className="w-5 h-5 rounded border-red-300 text-red-600 focus:ring-red-500" />
+                        <span className="font-medium text-red-800">{L[lang].redFlagsAck}</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Paso 2: Síntomas manuales */}
+              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div className="bg-gradient-to-r from-slate-50 to-white p-5 border-b border-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-teal-600 text-white rounded-lg flex items-center justify-center font-bold text-sm">2</div>
+                    <div>
+                      <h3 className="font-bold text-slate-800">{L[lang].step2}</h3>
+                      <p className="text-sm text-slate-500">{lang === 'es' ? 'Escribe o dicta síntomas adicionales' : 'Type or dictate additional symptoms'}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <SymptomForm onSubmit={onSubmit} disabled={loading || (redFlags.length > 0 && !ackRedFlags)} lang={lang} guidedSymptoms={guidedSymptoms} />
+                </div>
+              </div>
+
+              {/* Estado de carga y resultados */}
+              <div aria-live="polite" aria-atomic="true">
+                {loading && (
+                  <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin" />
+                    <p className="text-lg font-medium text-slate-700">{L[lang].processing}</p>
+                    <p className="text-sm text-slate-500 mt-1">{lang === 'es' ? 'Analizando tus síntomas...' : 'Analyzing your symptoms...'}</p>
+                  </div>
+                )}
+                {error && (
+                  <div role="alert" className={`bg-red-50 rounded-2xl border border-red-200 p-6 ${visualAlerts ? 'animate-pulse border-4 border-red-500' : ''}`}>
+                    <div className="flex items-center gap-3">
+                      <AlertCircle className="text-red-500" size={24} />
+                      <p className="text-red-700 font-medium">{error}</p>
+                    </div>
+                  </div>
+                )}
+                {data && <Results data={data} lang={lang} />}
+              </div>
+            </div>
+
+            {/* Sidebar */}
+            <aside className="space-y-4">
+              <DxSidebar lang={lang} />
+            </aside>
+          </div>
         </section>
       )
     }
@@ -515,25 +687,69 @@ export function App() {
 function DxSidebar({ lang }: { lang: Lang }) {
   return (
     <>
-      <div className="card">
-        <div className="card-body">
-          <img src={illDx} alt="" aria-hidden className="w-full rounded" />
+      {/* Imagen decorativa */}
+      <div className="dx-sidebar-card overflow-hidden">
+        <div className="bg-gradient-to-br from-teal-50 to-emerald-50 p-6">
+          <img src={illDx} alt="" aria-hidden className="w-full rounded-xl shadow-sm" />
         </div>
       </div>
-      <div className="card">
-        <div className="card-body text-sm">
-          <h3 className="font-semibold mb-1">{lang==='en' ? 'Tips' : 'Consejos'}</h3>
-          <ul className="list-disc pl-5 space-y-1 muted">
-            <li>{lang==='en' ? 'Describe symptoms in simple words.' : 'Describe los síntomas con palabras simples.'}</li>
-            <li>{lang==='en' ? 'Include duration and intensity if possible.' : 'Incluye duración e intensidad si es posible.'}</li>
-            <li>{lang==='en' ? 'Use the guided questions first.' : 'Empieza por las preguntas guiadas.'}</li>
-          </ul>
+      
+      {/* Tips mejorado */}
+      <div className="dx-sidebar-card">
+        <div className="dx-sidebar-header">
+          <div className="flex items-center gap-2">
+            <span className="text-xl">💡</span>
+            <h3 className="font-bold text-teal-800">{lang==='en' ? 'Tips' : 'Consejos'}</h3>
+          </div>
+        </div>
+        <div className="p-5 space-y-4">
+          <div className="flex items-start gap-3">
+            <div className="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span className="text-teal-600 text-xs font-bold">1</span>
+            </div>
+            <p className="text-sm text-slate-600">{lang==='en' ? 'Describe symptoms in simple words.' : 'Describe los síntomas con palabras simples.'}</p>
+          </div>
+          <div className="flex items-start gap-3">
+            <div className="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span className="text-teal-600 text-xs font-bold">2</span>
+            </div>
+            <p className="text-sm text-slate-600">{lang==='en' ? 'Include duration and intensity if possible.' : 'Incluye duración e intensidad si es posible.'}</p>
+          </div>
+          <div className="flex items-start gap-3">
+            <div className="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <span className="text-teal-600 text-xs font-bold">3</span>
+            </div>
+            <p className="text-sm text-slate-600">{lang==='en' ? 'Use the guided questions first.' : 'Empieza por las preguntas guiadas.'}</p>
+          </div>
         </div>
       </div>
-      <div className="card">
-        <div className="card-body text-sm">
-          <h3 className="font-semibold mb-1">{lang==='en' ? 'Important' : 'Importante'}</h3>
-          <p className="muted">{lang==='en' ? 'Preliminary assessment only. Not a diagnosis.' : 'Evaluación preliminar. No es un diagnóstico.'}</p>
+      
+      {/* Importante */}
+      <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl border border-amber-200 p-5">
+        <div className="flex items-start gap-3">
+          <span className="text-2xl">⚠️</span>
+          <div>
+            <h3 className="font-bold text-amber-800 mb-1">{lang==='en' ? 'Important' : 'Importante'}</h3>
+            <p className="text-sm text-amber-700">{lang==='en' ? 'Preliminary assessment only. Not a diagnosis.' : 'Evaluación preliminar. No es un diagnóstico.'}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats rápidas */}
+      <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-5 text-white">
+        <h3 className="font-bold mb-4 flex items-center gap-2">
+          <Activity size={18} />
+          {lang === 'es' ? 'Base de datos' : 'Database'}
+        </h3>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="text-center p-3 bg-white/10 rounded-lg">
+            <div className="text-2xl font-bold text-emerald-400">97</div>
+            <div className="text-xs text-slate-400 mt-1">{lang === 'es' ? 'Diagnósticos' : 'Diagnoses'}</div>
+          </div>
+          <div className="text-center p-3 bg-white/10 rounded-lg">
+            <div className="text-2xl font-bold text-emerald-400">228</div>
+            <div className="text-xs text-slate-400 mt-1">{lang === 'es' ? 'Síntomas' : 'Symptoms'}</div>
+          </div>
         </div>
       </div>
     </>

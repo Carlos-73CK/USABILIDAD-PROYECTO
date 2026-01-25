@@ -57,9 +57,10 @@ type Props = Readonly<{
   onSubmit: (symptoms: string[]) => void
   disabled?: boolean
   lang?: 'es' | 'en'
+  guidedSymptoms?: string[]
 }>
 
-export function SymptomForm({ onSubmit, disabled, lang = 'es' }: Props) {
+export function SymptomForm({ onSubmit, disabled, lang = 'es', guidedSymptoms = [] }: Props) {
   const [input, setInput] = useState('')
   const [list, setList] = useState<string[]>([])
   const [listening, setListening] = useState(false)
@@ -162,33 +163,95 @@ export function SymptomForm({ onSubmit, disabled, lang = 'es' }: Props) {
     },
   } as const
 
+  // Referencia para el reconocimiento de voz
+  const recognitionRef = useRef<any>(null)
+
   function toggleListening() {
-    if (listening) return 
+    // Si ya está escuchando, detenerlo
+    if (listening && recognitionRef.current) {
+      recognitionRef.current.stop()
+      setListening(false)
+      return
+    }
     
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
     if (!SpeechRecognition) {
-      alert('Tu navegador no soporta dictado por voz.')
+      alert(lang === 'es' 
+        ? 'Tu navegador no soporta dictado por voz. Prueba con Chrome o Edge.' 
+        : 'Your browser does not support voice dictation. Try Chrome or Edge.')
       return
     }
 
     const recognition = new SpeechRecognition()
+    recognitionRef.current = recognition
     recognition.lang = lang === 'en' ? 'en-US' : 'es-ES'
-    recognition.interimResults = false
+    recognition.interimResults = true // Mostrar resultados intermedios
+    recognition.continuous = true // Seguir escuchando
     recognition.maxAlternatives = 1
 
     recognition.onstart = () => setListening(true)
-    recognition.onend = () => setListening(false)
-    recognition.onerror = () => setListening(false)
-
-    recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript
-      if (transcript) {
-        setInput((prev) => (prev ? prev + ' ' + transcript : transcript))
+    
+    recognition.onend = () => {
+      setListening(false)
+      recognitionRef.current = null
+    }
+    
+    recognition.onerror = (event: any) => {
+      console.error('Speech recognition error:', event.error)
+      setListening(false)
+      recognitionRef.current = null
+      if (event.error === 'no-speech') {
+        // No hacer nada, es normal
+      } else if (event.error === 'not-allowed') {
+        alert(lang === 'es' 
+          ? 'Permiso de micrófono denegado. Permite el acceso al micrófono en tu navegador.' 
+          : 'Microphone permission denied. Please allow microphone access in your browser.')
       }
     }
 
-    recognition.start()
+    recognition.onresult = (event: any) => {
+      // Obtener el último resultado
+      const lastResult = event.results[event.results.length - 1]
+      const transcript = lastResult[0].transcript.trim()
+      
+      if (lastResult.isFinal && transcript) {
+        // Si es resultado final, agregar como síntoma o al input
+        const cleanTranscript = transcript.toLowerCase()
+        // Buscar coincidencia en síntomas conocidos
+        const matchedSymptom = KNOWN_SYMPTOMS.find(s => 
+          cleanTranscript.includes(s) || s.includes(cleanTranscript)
+        )
+        
+        if (matchedSymptom && !list.includes(matchedSymptom)) {
+          setList(l => [...l, matchedSymptom])
+          setInput('')
+        } else if (!list.includes(cleanTranscript)) {
+          // Agregar directamente a la lista
+          setList(l => [...l, cleanTranscript])
+          setInput('')
+        }
+      } else {
+        // Resultado intermedio, mostrar en el input
+        setInput(transcript)
+      }
+    }
+
+    try {
+      recognition.start()
+    } catch (e) {
+      console.error('Error starting speech recognition:', e)
+      setListening(false)
+    }
   }
+
+  // Limpiar reconocimiento al desmontar
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop()
+      }
+    }
+  }, [])
 
   function addSymptom() {
     const v = input.trim()
@@ -327,13 +390,16 @@ export function SymptomForm({ onSubmit, disabled, lang = 'es' }: Props) {
         <button 
           type="submit" 
           className="w-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-teal-200 hover:shadow-xl hover:scale-[1.01] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
-          disabled={list.length === 0 || disabled}
+          disabled={(list.length === 0 && guidedSymptoms.length === 0) || disabled}
         >
           <span>{L[lang].submit}</span>
           <ArrowRight size={20} />
         </button>
-        {list.length === 0 && (
+        {list.length === 0 && guidedSymptoms.length === 0 && (
           <p className="text-center text-sm text-slate-400 mt-2">{L[lang].empty}</p>
+        )}
+        {list.length === 0 && guidedSymptoms.length > 0 && (
+          <p className="text-center text-sm text-teal-600 mt-2">✓ {guidedSymptoms.length} síntoma(s) de preguntas guiadas</p>
         )}
       </div>
     </form>
